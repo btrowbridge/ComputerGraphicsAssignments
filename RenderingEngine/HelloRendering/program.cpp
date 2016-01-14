@@ -1,9 +1,17 @@
 
 #include "pch.h"
 
+
 using namespace std;
 using namespace Library;
 using namespace DirectX;
+
+void InitializeDirectX();
+void InitializeWindow(HINSTANCE instance, const wstring& className, const wstring& windowTitle, int showCommand);
+LRESULT WINAPI WndProc(HWND windowHandle, UINT message, WPARAM wParam, LPARAM lParam);
+POINT CenterWindow(int windowWidth, int windowHeight);
+void ShutDown(const wstring& className);
+
 
 HWND mWindowHandle;
 WNDCLASSEX mWindow;
@@ -14,23 +22,18 @@ const UINT mScreenWidth = 768;
 const UINT mFrameRate = 60;
 bool mIsFullScreen = false;
 bool mMultiSamplingEnabled;
-UINT mMultiSamplingCount;
-UINT mMultiSamplingQualityLevels;
+
 
 D3D_FEATURE_LEVEL mFeatureLevel;
 IDXGISwapChain1* mSwapChain;
-ID3D11Device* mDirect3DDevice;
+ID3D11Device1* mDirect3DDevice;
 ID3D11DeviceContext1* mDirect3DDeviceContext;
 ID3D11RenderTargetView* mRenderTargetView;
 ID3D11DepthStencilView* mDepthStencilView;
 
-void InitializeDirectX();
-void InitializeWindow(HINSTANCE instance, const wstring& className, const wstring& windowTitle, int showCommand);
-LRESULT WINAPI WndProc(HWND windowHandle, UINT message, WPARAM wParam, LPARAM lParam);
-POINT CenterWindow(int windowWidth, int windowHeight);
-void ShutDown(const wstring& className);
 
-const XMVECTORF32 backgroundColor = { 1.0f, 0.750f, 0.0f, 1.0f }; //RGBA
+const XMVECTORF32 backgroundColor = { 0.0f, 0.750f, 1.0f, 1.0f }; //RGBA
+
 
 int WINAPI WinMain(HINSTANCE instance, HINSTANCE previousInstance, LPSTR commandLine, int showCommand)
 {
@@ -88,8 +91,7 @@ void InitializeWindow(HINSTANCE instance, const wstring& className, const wstrin
 
 	RegisterClassEx(&mWindow);
 	POINT center = CenterWindow(mScreenWidth, mScreenHight);
-	mWindowHandle = CreateWindow(className.c_str(), windowTitle.c_str(), WS_OVERLAPPEDWINDOW, 
-		center.x, center.y, windowRectangle.right - windowRectangle.left, windowRectangle.bottom - windowRectangle.top, nullptr,nullptr, instance, nullptr);
+	mWindowHandle = CreateWindow(className.c_str(), windowTitle.c_str(), WS_OVERLAPPEDWINDOW, center.x, center.y, windowRectangle.right - windowRectangle.left, windowRectangle.bottom - windowRectangle.top, nullptr,nullptr, instance, nullptr);
 
 	ShowWindow(mWindowHandle, showCommand);
 	UpdateWindow(mWindowHandle);
@@ -129,7 +131,7 @@ void InitializeDirectX()
 	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG; //Debug or no?
 #endif
 	//DirectX version supported levels
-	D3D_FEATURE_LEVEL featuredLevels[] = {
+	D3D_FEATURE_LEVEL featureLevels[] = {
 		D3D_FEATURE_LEVEL_11_1,
 		D3D_FEATURE_LEVEL_11_0,
 		D3D_FEATURE_LEVEL_10_1,
@@ -140,9 +142,7 @@ void InitializeDirectX()
 	ID3D11DeviceContext* direct3DDeviceContext = nullptr;
 	
 	
-	ThrowIfFailed(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE, NULL,
-		createDeviceFlags, featuredLevels, ARRAYSIZE(featuredLevels), UINT D3D10_SDK_VERSION,
-		&direct3DDevice, &mFeatureLevel, &direct3DDeviceContext), "D3D11CreateDevice(...) failed.Line: 112");
+	ThrowIfFailed(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE, NULL, createDeviceFlags, featureLevels, ARRAYSIZE(featureLevels), D3D11_SDK_VERSION, &direct3DDevice, &mFeatureLevel, &direct3DDeviceContext), "D3D11CreateDevice(...) failed.Line: 112");
 
 	ThrowIfFailed(direct3DDevice->QueryInterface(__uuidof(ID3D11Device1), reinterpret_cast<void**>(&mDirect3DDevice)), "ID3D11Device::QueryInterface() failed");
 	ThrowIfFailed(direct3DDeviceContext->QueryInterface(__uuidof(ID3D11DeviceContext1), reinterpret_cast<void**>(&mDirect3DDeviceContext)), "ID3D11Device::QueryInterface() failed");
@@ -151,16 +151,16 @@ void InitializeDirectX()
 	ReleaseObject(direct3DDeviceContext);
 
 	//Populating a swap chain
-
-	mDirect3DDevice->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 
-		mMultiSamplingCount, &mMultiSamplingQualityLevels);
+	UINT mMultiSamplingCount = 4;
+	UINT mMultiSamplingQualityLevels;
+	ThrowIfFailed(mDirect3DDevice->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, mMultiSamplingCount, &mMultiSamplingQualityLevels), "CheckMultisampleQualityLevels() failed.");
 
 	if (mMultiSamplingQualityLevels == 0) {
 		throw GameException("Unsupported multi-sampling quality");
 	}
 
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc = { 0 };
-	ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
+	//ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
 	swapChainDesc.Width = mScreenWidth;
 	swapChainDesc.Height = mScreenHight;
 	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;

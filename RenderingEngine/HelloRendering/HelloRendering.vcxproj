@@ -172,7 +172,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Game.h" />
     <ClInclude Include="GameException.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
