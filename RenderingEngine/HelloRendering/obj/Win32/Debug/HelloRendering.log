@@ -1,2 +1,1 @@
-﻿  program.cpp
-c:\users\bradley trowbridge\documents\computer graphics\projects\renderingengine\hellorendering\program.cpp(112): error C2065: 'mFeatureLevels': undeclared identifier
+﻿  HelloRendering.vcxproj -> C:\Users\Bradley Trowbridge\Documents\Computer Graphics\Projects\RenderingEngine\HelloRendering\bin\Win32\Debug\HelloRendering.exe

@@ -3,8 +3,11 @@
   <ItemGroup>
     <ClCompile Include="program.cpp" />
     <ClCompile Include="pch.cpp" />
+    <ClCompile Include="GameException.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="GameException.h" />
   </ItemGroup>
 </Project>
