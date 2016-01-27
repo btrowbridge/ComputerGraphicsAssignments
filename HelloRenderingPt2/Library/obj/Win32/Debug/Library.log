@@ -1,0 +1,10 @@
+﻿  pch.cpp
+  Utility.cpp
+  GameTime.cpp
+  GameException.cpp
+  GameComponent.cpp
+  GameClock.cpp
+  Game.cpp
+  DrawableGameComponent.cpp
+  Generating Code...
+  Library.vcxproj -> C:\Users\Bradley Trowbridge\Documents\Computer Graphics\Projects\HelloRenderingPt2\Library\bin\Win32\Debug\Library.lib

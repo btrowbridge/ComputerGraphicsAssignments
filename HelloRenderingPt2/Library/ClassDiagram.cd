@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Library::DrawableGameComponent">
+    <Position X="3.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAgAAAAAAAAAAAAAAAAQIAAAkAAAAAAA=</HashCode>
+      <FileName>DrawableGameComponent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Library::Game">
+    <Position X="6.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EASAAABAAAAEAwAGAAABAQAEAAimAIABAAAgAAAAAAI=</HashCode>
+      <FileName>Game.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Library::GameTime">
+    <Position X="12" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACBAAAQAAAAAEAAAAAgIAAAACCAAAEABgAAAgAAAAAA=</HashCode>
+      <FileName>GameTime.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Library::GameClock">
+    <Position X="10.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAABAAAAAAIAAAAIAIUAAAAAAAggIAAAAA=</HashCode>
+      <FileName>GameClock.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Library::GameComponent">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAQACAAFAAAAAYABAAAAAAAAAAAAAAAAAAAgAAAAAIA=</HashCode>
+      <FileName>GameComponent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Library::GameException">
+    <Position X="8.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAAAABAQAAAAAAAAIAAAA=</HashCode>
+      <FileName>GameException.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Library::RTTI">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAEgAAAAAAAAABAwAAAIAAAAAAAAAA=</HashCode>
+      <FileName>RTTI.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Library::Utility">
+    <Position X="8.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAIIAkAAAAAAAAQAAAABAAEAAgBAAAAAA=</HashCode>
+      <FileName>Utility.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

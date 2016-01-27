@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Program.cpp" />
+    <ClCompile Include="RenderingGame.cpp" />
+    <ClCompile Include="PointDemo.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="RenderingGame.h" />
+    <ClInclude Include="PointDemo.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Demos">
+      <UniqueIdentifier>{b975c330-179b-49bf-ae7a-9134ac189282}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Content">
+      <UniqueIdentifier>{ef01ec8b-8567-48c2-9683-0f43d99c5293}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Content\Shaders">
+      <UniqueIdentifier>{6915dbb8-dfa9-49a4-a45b-a8d9561f96d4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\VertexShader.hlsl">
+      <Filter>Content\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PixelShader.hlsl">
+      <Filter>Content\Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>
