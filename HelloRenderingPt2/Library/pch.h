@@ -29,3 +29,4 @@
 #include "GameComponent.h"
 #include "DrawableGameComponent.h"
 #include "Utility.h"
+#include "VectorHelper.h"

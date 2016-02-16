@@ -10,6 +10,10 @@
     <ClInclude Include="GameComponent.h" />
     <ClInclude Include="RTTI.h" />
     <ClInclude Include="Utility.h" />
+    <ClInclude Include="VectorHelper.h" />
+    <ClInclude Include="Camera.h">
+      <Filter>Cameras</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
@@ -20,8 +24,17 @@
     <ClCompile Include="DrawableGameComponent.cpp" />
     <ClCompile Include="GameComponent.cpp" />
     <ClCompile Include="Utility.cpp" />
+    <ClCompile Include="VectorHelper.cpp" />
+    <ClCompile Include="Camera.cpp">
+      <Filter>Cameras</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Cameras">
+      <UniqueIdentifier>{07241a1d-b7ab-472c-a0fb-2ec68e0e4171}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
