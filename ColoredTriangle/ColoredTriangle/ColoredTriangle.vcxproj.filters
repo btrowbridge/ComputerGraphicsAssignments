@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <FxCompile Include="Content\Shaders\ColoredTriangleDemoVS.hlsl">
+      <Filter>Content\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Content\Shaders\ColoredTriangleDemoPS.hlsl">
+      <Filter>Content\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Content\Shaders\CubeDemoPS.hlsl">
+      <Filter>Content\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Content\Shaders\CubeDemoVS.hlsl">
+      <Filter>Content\Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ColoredTriangleDemo.cpp" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Program.cpp" />
+    <ClCompile Include="RenderingGame.cpp" />
+    <ClCompile Include="CubeDemo.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ColoredTriangleDemo.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="RenderingGame.h" />
+    <ClInclude Include="CubeDemo.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Content">
+      <UniqueIdentifier>{61b74788-b10d-4c6f-9150-27e4f0a88211}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Content\Shaders">
+      <UniqueIdentifier>{e09b8682-1ae2-4046-b695-715303c5bf44}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

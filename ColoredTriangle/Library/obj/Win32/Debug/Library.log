@@ -1,0 +1,14 @@
+﻿  pch.cpp
+  VectorHelper.cpp
+  Utility.cpp
+  PerspectiveCamera.cpp
+  OrthographicCamera.cpp
+  GameTime.cpp
+  GameException.cpp
+  GameComponent.cpp
+  GameClock.cpp
+  Game.cpp
+  DrawableGameComponent.cpp
+  Camera.cpp
+  Generating Code...
+  Library.vcxproj -> C:\Users\Bradley Trowbridge\Documents\Computer Graphics\Projects\ColoredTriangle\Library\bin\Win32\Debug\Library.lib
