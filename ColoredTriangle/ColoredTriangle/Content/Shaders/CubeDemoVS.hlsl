@@ -1,6 +1,6 @@
-cbuffer CBufferPerFrame 
+cbuffer CBufferPerObject 
 {
-	float4x4 WorldViewProjectionMatrix;
+	float4x4 WorldViewProjection;
 };
 
 
@@ -20,7 +20,7 @@ VS_OUTPUT main(VS_INPUT IN)
 {
 	VS_OUTPUT OUT = (VS_OUTPUT)0;
 	
-	OUT.Position = mul(IN.ObjectPosition, WorldViewProjectionMatrix);
+	OUT.Position = mul(IN.ObjectPosition, WorldViewProjection);
 
 	OUT.Color = IN.Color;
 

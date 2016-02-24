@@ -35,6 +35,9 @@
 #include "DrawableGameComponent.h"
 #include "Utility.h"
 #include "VertexDeclarations.h"
+#include "Camera.h"
+#include "PerspectiveCamera.h"
+#include "OrthographicCamera.h"
 
 // Local
 #include "RenderingGame.h"

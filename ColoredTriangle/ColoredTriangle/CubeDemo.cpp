@@ -2,6 +2,7 @@
 
 using namespace Library;
 using namespace DirectX;
+using namespace std;
 
 namespace Rendering
 {
@@ -13,6 +14,15 @@ namespace Rendering
 
 	void CubeDemo::Initialize()
 	{
+		//initialize camera
+		mCamera = make_unique<PerspectiveCamera>(*mGame);
+		mCamera->Initialize();
+		mCamera->SetPosition(0, 2, 2);
+		mCamera->ApplyRotation(XMMatrixRotationX(XMConvertToRadians(-45.0f)));
+		//XMStoreFloat4x4(&mWorldMatrix, XMMatrixTranslation(0, 0, -2));
+		
+		
+
 		// Load a compiled vertex shader
 		std::vector<char> compiledVertexShader;
 		Utility::LoadBinaryFile(L"Content\\Shaders\\CubeDemoVS.cso", compiledVertexShader);
@@ -32,14 +42,47 @@ namespace Rendering
 
 		ThrowIfFailed(mGame->Direct3DDevice()->CreateInputLayout(inputElementDescriptions, ARRAYSIZE(inputElementDescriptions), &compiledVertexShader[0], compiledVertexShader.size(), mInputLayout.ReleaseAndGetAddressOf()), "ID3D11Device::CreateInputLayout() failed.");
 
-		// Create a vertex buffer
+		//Create a Vertex Buffer
 		VertexPositionColor vertices[] =
 		{
-			VertexPositionColor(XMFLOAT4(-0.5f, -0.5f, 0.5f, 1.0f), XMFLOAT4(&Colors::Red[0])),
-			VertexPositionColor(XMFLOAT4(0.0f, 0.5f, 0.5f, 1.0f), XMFLOAT4(&Colors::Green[0])),
-			VertexPositionColor(XMFLOAT4(0.5f, -0.5f, 0.5f, 1.0f), XMFLOAT4(&Colors::Blue[0]))
+			/*0*/	VertexPositionColor(XMFLOAT4(-0.25f, 0.25f, -0.25f, 1.0f), XMFLOAT4(&Colors::Red[0])),
+			/*1*/	VertexPositionColor(XMFLOAT4(0.25f, 0.25f, -0.25f, 1.0f), XMFLOAT4(&Colors::Green[0])),
+			/*2*/	VertexPositionColor(XMFLOAT4(0.25f, 0.25f, 0.25f, 1.0f), XMFLOAT4(&Colors::Blue[0])),
+			/*3*/	VertexPositionColor(XMFLOAT4(-0.25f, 0.25f, 0.25f, 1.0f), XMFLOAT4(&Colors::Orange[0])),
+			/*4*/	VertexPositionColor(XMFLOAT4(-0.25f, -0.25f, 0.25f, 1.0f), XMFLOAT4(&Colors::Purple[0])),
+			/*5*/	VertexPositionColor(XMFLOAT4(0.25f, -0.25f, 0.25f, 1.0f), XMFLOAT4(&Colors::Yellow[0])),
+			/*6*/	VertexPositionColor(XMFLOAT4(0.25f, -0.25f, -0.25f, 1.0f), XMFLOAT4(&Colors::Black[0])),
+			/*7*/	VertexPositionColor(XMFLOAT4(-0.25f, -0.25f, -0.25f, 1.0f), XMFLOAT4(&Colors::Brown[0]))
 		};
 
+		// Create an index buffer
+		UINT indices[] = { 
+			0, 1, 2,
+			0, 2, 3,
+			4, 5, 6,
+			4, 6, 7,
+			3, 2, 5,
+			3, 5, 4,
+			2, 1, 6,
+			2, 6, 5,
+			1, 7, 6,
+			1, 0, 7,
+			0, 3, 4,
+			0, 4, 7 
+		};
+
+		//Index Buffer
+		D3D11_BUFFER_DESC indexBufferDesc = { 0 };
+		indexBufferDesc.ByteWidth = sizeof(UINT) * ARRAYSIZE(indices);
+		indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+		indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+
+		D3D11_SUBRESOURCE_DATA indexSubResourceData;
+		indexSubResourceData.pSysMem = indices;
+		ThrowIfFailed(mGame->Direct3DDevice()->CreateBuffer(&indexBufferDesc, &indexSubResourceData, mIndexBuffer.ReleaseAndGetAddressOf()), " ID3D11Device:: CreateBuffer() failed.");
+		
+
+		//Vertex Buffer
 		D3D11_BUFFER_DESC vertexBufferDesc = { 0 };
 		vertexBufferDesc.ByteWidth = sizeof(VertexPositionColor) * ARRAYSIZE(vertices);
 		vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
@@ -48,6 +91,14 @@ namespace Rendering
 		D3D11_SUBRESOURCE_DATA vertexSubResourceData = { 0 };
 		vertexSubResourceData.pSysMem = vertices;
 		ThrowIfFailed(mGame->Direct3DDevice()->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, mVertexBuffer.ReleaseAndGetAddressOf()), "ID3D11Device::CreateBuffer() failed.");
+	
+		//Constant Buffer
+		D3D11_BUFFER_DESC constantBufferDesc = { 0 };
+		constantBufferDesc.ByteWidth = sizeof(CBufferPerObject);
+		constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		ThrowIfFailed(mGame->Direct3DDevice()->CreateBuffer(&constantBufferDesc, nullptr, mConstantBuffer.ReleaseAndGetAddressOf()), "ID3D11Device::CreateBuffer() failed.");
+
+
 	}
 
 	void CubeDemo::Draw(const Library::GameTime & gameTime)
@@ -62,9 +113,40 @@ namespace Rendering
 		UINT offset = 0;
 		direct3DDeviceContext->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), &stride, &offset);
 
+		direct3DDeviceContext->IASetIndexBuffer(mIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+
+
 		direct3DDeviceContext->VSSetShader(mVertexShader.Get(), nullptr, 0);
 		direct3DDeviceContext->PSSetShader(mPixelShader.Get(), nullptr, 0);
 
-		direct3DDeviceContext->Draw(3, 0);
+		XMMATRIX worldMatrix = XMLoadFloat4x4(&mWorldMatrix);
+		XMMATRIX wvp = worldMatrix * mCamera->ViewProjectionMatrix();
+		wvp = XMMatrixTranspose(wvp);
+		XMStoreFloat4x4(&mCBufferPerObject.WorldViewProjection, wvp);
+
+		direct3DDeviceContext->UpdateSubresource(mConstantBuffer.Get(), 0, nullptr, &mCBufferPerObject, 0,0);
+		direct3DDeviceContext->VSSetConstantBuffers(0, 1, mConstantBuffer.GetAddressOf());
+
+		direct3DDeviceContext->DrawIndexed(36, 0, 0);
+	}
+	void CubeDemo::Update(const Library::GameTime & gameTime)
+	{
+		
+		
+		
+		mCamera->Update(gameTime);
+		
+		
+
+
+		const float rateOfChange = 30.0f;
+		static float yRotation = 0.0f;
+
+		yRotation -= rateOfChange * gameTime.ElapsedGameTimeSeconds().count();
+		
+		
+		XMStoreFloat4x4(&mWorldMatrix, XMMatrixRotationY(XMConvertToRadians(yRotation)));
+		
+		
 	}
 }
