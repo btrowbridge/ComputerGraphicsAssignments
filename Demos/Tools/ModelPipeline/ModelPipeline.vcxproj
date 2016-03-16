@@ -67,8 +67,7 @@
       </AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>IF EXIST "$(ProjectDir)Content" xcopy /E /Y "$(ProjectDir)Content" "$(OutDir)Content\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -93,8 +92,7 @@
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>IF EXIST "$(ProjectDir)Content" xcopy /E /Y "$(ProjectDir)Content" "$(OutDir)Content\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

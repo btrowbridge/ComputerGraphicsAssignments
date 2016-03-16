@@ -45,6 +45,10 @@
     </ClInclude>
     <ClInclude Include="StreamHelper.h" />
     <ClInclude Include="ColorHelper.h" />
+    <ClInclude Include="SamplerStates.h" />
+    <ClInclude Include="..\..\..\directx-essentials-livelessons\source\Library\FirstPersonCamera.h">
+      <Filter>Cameras</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
@@ -89,6 +93,10 @@
     </ClCompile>
     <ClCompile Include="StreamHelper.cpp" />
     <ClCompile Include="ColorHelper.cpp" />
+    <ClCompile Include="SamplerStates.cpp" />
+    <ClCompile Include="..\..\..\directx-essentials-livelessons\source\Library\FirstPersonCamera.cpp">
+      <Filter>Cameras</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Cameras">

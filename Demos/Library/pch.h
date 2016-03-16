@@ -26,6 +26,9 @@
 #include <SpriteBatch.h>
 #include <SpriteFont.h>
 
+#include <DDSTextureLoader.h>
+#include <WICTextureLoader.h>
+
 // Local
 #include "GameException.h"
 #include "Game.h"
@@ -40,6 +43,7 @@
 #include "Camera.h"
 #include "PerspectiveCamera.h"
 #include "OrthographicCamera.h"
+#include "FirstPersonCamera.h"
 #include "GamePadComponent.h"
 #include "KeyboardComponent.h"
 #include "MouseComponent.h"
@@ -51,3 +55,4 @@
 #include "ModelMaterial.h"
 #include "Mesh.h"
 #include "ColorHelper.h"
+#include "SamplerStates.h"

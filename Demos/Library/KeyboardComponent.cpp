@@ -7,9 +7,9 @@ namespace Library
 {
 	RTTI_DEFINITIONS(KeyboardComponent)
 
-	unique_ptr<Keyboard> KeyboardComponent::sKeyboard(new DirectX::Keyboard);
+	unique_ptr<DirectX::Keyboard> KeyboardComponent::sKeyboard(new DirectX::Keyboard);
 
-	Keyboard* KeyboardComponent::Keyboard()
+	DirectX::Keyboard* KeyboardComponent::Keyboard()
 	{
 		return sKeyboard.get();
 	}
@@ -19,12 +19,12 @@ namespace Library
 	{
 	}
 
-	const Keyboard::State& KeyboardComponent::CurrentState() const
+	const DirectX::Keyboard::State& KeyboardComponent::CurrentState() const
 	{
 		return mCurrentState;
 	}
 
-	const Keyboard::State& KeyboardComponent::LastState() const
+	const DirectX::Keyboard::State& KeyboardComponent::LastState() const
 	{
 		return mLastState;
 	}
@@ -45,22 +45,22 @@ namespace Library
 
 	bool KeyboardComponent::IsKeyUp(Keys key) const
 	{
-		return mCurrentState.IsKeyUp(static_cast<Keyboard::Keys>(key));
+		return mCurrentState.IsKeyUp(static_cast<DirectX::Keyboard::Keys>(key));
 	}
 
 	bool KeyboardComponent::IsKeyDown(Keys key) const
 	{
-		return mCurrentState.IsKeyDown(static_cast<Keyboard::Keys>(key));
+		return mCurrentState.IsKeyDown(static_cast<DirectX::Keyboard::Keys>(key));
 	}
 
 	bool KeyboardComponent::WasKeyUp(Keys key) const
 	{
-		return mLastState.IsKeyUp(static_cast<Keyboard::Keys>(key));
+		return mLastState.IsKeyUp(static_cast<DirectX::Keyboard::Keys>(key));
 	}
 
 	bool KeyboardComponent::WasKeyDown(Keys key) const
 	{
-		return mLastState.IsKeyDown(static_cast<Keyboard::Keys>(key));
+		return mLastState.IsKeyDown(static_cast<DirectX::Keyboard::Keys>(key));
 	}
 
 	bool KeyboardComponent::WasKeyPressedThisFrame(Keys key) const

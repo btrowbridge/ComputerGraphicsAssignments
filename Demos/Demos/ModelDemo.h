@@ -16,8 +16,12 @@ namespace Rendering
 	{
 	public:
 		ModelDemo(Library::Game& game);
+		ModelDemo(Game & game, const std::shared_ptr<Library::Camera>& camera);
 		ModelDemo(const ModelDemo& rhs) = delete;
 		ModelDemo& operator=(const ModelDemo& rhs) = delete;
+
+		void SetAnimationEnabled(bool isEnabled);
+		bool AnimationEnabled();
 
 		virtual void CreateVertexBuffer(ID3D11Device* device, const Mesh& mesh, ID3D11Buffer** vertexBuffer) const;
 
@@ -44,8 +48,7 @@ namespace Rendering
 		DirectX::XMFLOAT4X4 mWorldMatrix;
 
 		UINT mIndexCount;
-		//Game Component
-		std::unique_ptr<Library::Camera> mCamera;
-		std::unique_ptr<Library::KeyboardComponent> mKeyboard;
+		bool mAnimationEnabled;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mColorTexture;
 	};
 }

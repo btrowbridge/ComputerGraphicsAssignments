@@ -1,5 +1,4 @@
 #include "pch.h"
-
 using namespace Library;
 using namespace DirectX;
 using namespace std;
@@ -7,24 +6,18 @@ using namespace std;
 namespace Rendering
 {
 	ModelDemo::ModelDemo(Library::Game & game) :
-		DrawableGameComponent(game), mVertexShader(), mPixelShader(), mWorldMatrix()
+		DrawableGameComponent(game), mVertexShader(), mIndexCount(), mPixelShader(), mWorldMatrix(MatrixHelper::Identity), mAnimationEnabled(true)
 	{
 		XMStoreFloat4x4(&mWorldMatrix, XMMatrixIdentity());
 	}
-
+	ModelDemo::ModelDemo(Game & game, const shared_ptr<Camera>& camera) :
+		DrawableGameComponent(game, camera), mWorldMatrix(MatrixHelper::Identity), mIndexCount(0), mAnimationEnabled(true)
+	{
+	}
 	void ModelDemo::Initialize()
 	{
-		//initialize camera
-		mCamera = make_unique<PerspectiveCamera>(*mGame);
-		mCamera->Initialize();
-		mCamera->SetPosition(0, 2, 2);
-		mCamera->ApplyRotation(XMMatrixRotationX(XMConvertToRadians(-45.0f)));
-		//XMStoreFloat4x4(&mWorldMatrix, XMMatrixTranslation(0, 0, -2));
-		
-		//Keyboard
-		mKeyboard = make_unique<KeyboardComponent>(*mGame);
-		
 
+		
 		// Load a compiled vertex shader
 		std::vector<char> compiledVertexShader;
 		Utility::LoadBinaryFile(L"Content\\Shaders\\ModelDemoVS.cso", compiledVertexShader);
@@ -46,9 +39,9 @@ namespace Rendering
 		
 		//load model
 
-		unique_ptr<Model> model = make_unique<Model>("Content\\Models\\Sphere.obj.bin");
+		unique_ptr<Library::Model> model = make_unique<Library::Model>("Content\\Models\\Sphere.obj.bin");
 
-     	Mesh* mesh = model->Meshes().at(0).get();
+		Mesh* mesh = model->Meshes().at(0).get();
 
 		//vertex buffer
 		CreateVertexBuffer(mGame->Direct3DDevice(), *mesh, mIndexBuffer.GetAddressOf());
@@ -57,14 +50,28 @@ namespace Rendering
 		mesh->CreateIndexBuffer(*mGame->Direct3DDevice(),mIndexBuffer.ReleaseAndGetAddressOf());
 		mIndexCount = static_cast<UINT>(mesh->Indices().size());
 
-		
+
 		//Constant Buffer
 		D3D11_BUFFER_DESC constantBufferDesc = { 0 };
 		constantBufferDesc.ByteWidth = sizeof(CBufferPerObject);
 		constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		ThrowIfFailed(mGame->Direct3DDevice()->CreateBuffer(&constantBufferDesc, nullptr, mConstantBuffer.ReleaseAndGetAddressOf()), "ID3D11Device::CreateBuffer() failed.");
-		
 
+
+		//Load a texture
+		wstring textureName = L"Content\\Textures\\EarthComposite.dds";
+		ThrowIfFailed(CreateDDSTextureFromFile(mGame->Direct3DDevice(), textureName.c_str(), nullptr, mColorTexture.ReleaseAndGetAddressOf()), "CreateDDSTexture failed");
+		
+	}
+
+	void ModelDemo::SetAnimationEnabled(bool isEnabled)
+	{
+		mAnimationEnabled = isEnabled;
+	}
+
+	bool ModelDemo::AnimationEnabled()
+	{
+		return mAnimationEnabled;
 	}
 
 	void ModelDemo::CreateVertexBuffer(ID3D11Device* device, const Mesh& mesh, ID3D11Buffer** vertexBuffer) const {
@@ -119,6 +126,8 @@ namespace Rendering
 		direct3DDeviceContext->UpdateSubresource(mConstantBuffer.Get(), 0, nullptr, &mCBufferPerObject, 0,0);
 		direct3DDeviceContext->VSSetConstantBuffers(0, 1, mConstantBuffer.GetAddressOf());
 
+		direct3DDeviceContext->PSSetShaderResources(0, 1, mColorTexture.GetAddressOf());
+		direct3DDeviceContext->PSSetSamplers(0, 1, SamplerStates::TrilinearWrap.GetAddressOf());
 		
 
 		direct3DDeviceContext->DrawIndexed(mIndexCount, 0, 0);
@@ -126,19 +135,17 @@ namespace Rendering
 
 	void ModelDemo::Update(const Library::GameTime & gameTime)
 	{
-		//Player Movement
-		const float playerSpeed = 10.0f;
 		
-	
-		mCamera->Update(gameTime);
-		
-		const float rateOfChange = 30.0f;
-		static float yRotation = 0.0f;
 
-		yRotation -= rateOfChange * gameTime.ElapsedGameTimeSeconds().count();
-		
-		
-		XMStoreFloat4x4(&mWorldMatrix, XMMatrixRotationY(XMConvertToRadians(yRotation)));
+		if (mAnimationEnabled) {
+			const float rateOfChange = 30.0f;
+			static float yRotation = 0.0f;
+
+			yRotation -= rateOfChange * gameTime.ElapsedGameTimeSeconds().count();
+
+
+			XMStoreFloat4x4(&mWorldMatrix, XMMatrixRotationY(XMConvertToRadians(yRotation)));
+		}
 		
 		
 	}

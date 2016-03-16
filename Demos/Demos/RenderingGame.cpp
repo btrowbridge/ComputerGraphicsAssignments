@@ -10,25 +10,46 @@ namespace Rendering
 
 	void RenderingGame::Initialize(UINT screenWidth, UINT screenHeight, HWND windowHandle)
 	{
-
-
-		mModelDemo = make_shared<ModelDemo>(*this);
-		mComponents.push_back(mModelDemo);
+		mCamera = make_shared<FirstPersonCamera>(*this);
+		mComponents.push_back(mCamera);
+		mServices.AddService(FirstPersonCamera::TypeIdClass(), mCamera.get());
 
 		mKeyboard = make_shared<KeyboardComponent>(*this);
 		mComponents.push_back(mKeyboard);
+		mServices.AddService(KeyboardComponent::TypeIdClass(), mKeyboard.get());
 
 		mMouse = make_shared<MouseComponent>(*this);
 		mComponents.push_back(mMouse);
+		mServices.AddService(MouseComponent::TypeIdClass(), mMouse.get());
+
+		mGamePad = make_shared<GamePadComponent>(*this, 0);
+		mComponents.push_back(mGamePad);
+		mServices.AddService(GamePadComponent::TypeIdClass(), mGamePad.get());
+
+		mModelDemo = make_shared<ModelDemo>(*this, mCamera);
+		mComponents.push_back(mModelDemo);
 
 		Game::Initialize(screenWidth, screenHeight, windowHandle);
+
+		mRenderStateHelper = make_shared<RenderStateHelper>(*this);
+		mFpsComponent = make_shared<FpsComponent>(*this);
+		mFpsComponent->Initialize();
+
+		mCamera->SetPosition(0.0f, 5.0f, 20.0f);
 	}
 
 	void RenderingGame::Update(const Library::GameTime & gameTime)
 	{
-		if (mKeyboard->WasKeyPressedThisFrame(Keys::Escape)) 
+		mFpsComponent->Update(gameTime);
+
+		if (mKeyboard->WasKeyPressedThisFrame(Keys::Escape))
 		{
-			Shutdown();
+			PostQuitMessage(0);
+		}
+
+		if (mKeyboard->WasKeyPressedThisFrame(Keys::Space))
+		{
+			mModelDemo->SetAnimationEnabled(!mModelDemo->AnimationEnabled());
 		}
 
 		Game::Update(gameTime);
@@ -41,6 +62,10 @@ namespace Rendering
 
 		Game::Draw(gameTime);
 
-		ThrowIfFailed(mSwapChain->Present(0, 0), "IDXGISwapChain::Present() failed.");
+		mRenderStateHelper->SaveAll();
+		mFpsComponent->Draw(gameTime);
+		mRenderStateHelper->RestoreAll();
+
+		ThrowIfFailed(mSwapChain->Present(1, 0), "IDXGISwapChain::Present() failed.");
 	}
 }

@@ -5,18 +5,17 @@
 #include <DirectXMath.h>
 #include "Game.h"
 
-namespace Library 
+namespace Library
 {
 	class KeyboardComponent;
+	class GamePadComponent;
 	class MouseComponent;
+	class FpsComponent;
+	class RenderStateHelper;
 }
 
 namespace Rendering
 {
-	class PointDemo;
-	class TriangleDemo;
-	class ColoredTriangleDemo;
-	class CubeDemo;
 	class ModelDemo;
 
 	class RenderingGame : public Library::Game
@@ -31,12 +30,12 @@ namespace Rendering
 	private:
 		static const DirectX::XMVECTORF32 BackgroundColor;
 
-		std::shared_ptr<ColoredTriangleDemo> mColoredTriangleDemo;
-		std::shared_ptr<CubeDemo> mCubeDemo;
-		std::shared_ptr<ModelDemo> mModelDemo;
-
-		std::shared_ptr<Library::KeyboardComponent> mKeyboard;
+		std::shared_ptr<Library::Camera> mCamera;
+		std::shared_ptr<Library::KeyboardComponent> mKeyboard;		
 		std::shared_ptr<Library::MouseComponent> mMouse;
-		
+		std::shared_ptr<Library::GamePadComponent> mGamePad;
+		std::shared_ptr<Library::FpsComponent> mFpsComponent;
+		std::shared_ptr<Library::RenderStateHelper> mRenderStateHelper;
+		std::shared_ptr<ModelDemo> mModelDemo;
 	};
 }

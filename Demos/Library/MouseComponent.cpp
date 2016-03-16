@@ -7,9 +7,9 @@ namespace Library
 {
 	RTTI_DEFINITIONS(MouseComponent)
 
-	unique_ptr<Mouse> MouseComponent::sMouse(new DirectX::Mouse);
+	unique_ptr<DirectX::Mouse> MouseComponent::sMouse(new DirectX::Mouse);
 
-	Mouse* MouseComponent::Mouse()
+	DirectX::Mouse* MouseComponent::Mouse()
 	{
 		return sMouse.get();
 	}
@@ -17,15 +17,15 @@ namespace Library
 	MouseComponent::MouseComponent(Game& game, MouseModes mode) :
 		GameComponent(game)
 	{
-		sMouse->SetMode(static_cast<Mouse::Mode>(mode));
+		sMouse->SetMode(static_cast<DirectX::Mouse::Mode>(mode));
 	}
 
-	const Mouse::State& MouseComponent::CurrentState() const
+	const DirectX::Mouse::State& MouseComponent::CurrentState() const
 	{
 		return mCurrentState;
 	}
 
-	const Mouse::State& MouseComponent::LastState() const
+	const DirectX::Mouse::State& MouseComponent::LastState() const
 	{
 		return mLastState;
 	}
@@ -96,10 +96,10 @@ namespace Library
 
 	void MouseComponent::SetMode(MouseModes mode)
 	{
-		sMouse->SetMode(static_cast<Mouse::Mode>(mode));
+		sMouse->SetMode(static_cast<DirectX::Mouse::Mode>(mode));
 	}
 
-	bool MouseComponent::GetButtonState(const Mouse::State& state, MouseButtons button) const
+	bool MouseComponent::GetButtonState(const DirectX::Mouse::State& state, MouseButtons button) const
 	{
 		switch (button)
 		{

@@ -13,6 +13,7 @@
 #include <codecvt>
 #include <cstdint>
 #include <vector>
+#include <cassert>
 
 #if defined(DEBUG) || defined(_DEBUG)
 #define _CRTDBG_MAP_ALLOC
@@ -25,8 +26,15 @@
 #include <dxgi1_3.h>
 #include <DirectXMath.h>
 #include <DirectXColors.h>
+#include <GamePad.h>
+#include <Keyboard.h>
+#include <Mouse.h>
+#include <SpriteBatch.h>
+#include <SpriteFont.h>
+#include <WICTextureLoader.h>
+#include <DDSTextureLoader.h>
 
-// Library
+//Library
 #include "GameException.h"
 #include "Game.h"
 #include "GameClock.h"
@@ -35,18 +43,26 @@
 #include "DrawableGameComponent.h"
 #include "Utility.h"
 #include "VertexDeclarations.h"
+#include "VectorHelper.h"
+#include "MatrixHelper.h"
 #include "Camera.h"
 #include "PerspectiveCamera.h"
 #include "OrthographicCamera.h"
+#include "FirstPersonCamera.h"
+#include "GamePadComponent.h"
 #include "KeyboardComponent.h"
 #include "MouseComponent.h"
-#include "GamePadComponent.h"
+#include "FpsComponent.h"
+#include "RenderStateHelper.h"
+#include "ServiceContainer.h"
+#include "..\Library\ModelMaterial.h"
 #include "..\Library\Model.h"
 #include "..\Library\Mesh.h"
-#include "..\Library\ModelMaterial.h"
+#include "SamplerStates.h"
+
 
 // Local
 #include "RenderingGame.h"
-#include "ColoredTriangleDemo.h"
 #include "CubeDemo.h"
+#include "ColoredTriangleDemo.h"
 #include "ModelDemo.h"
