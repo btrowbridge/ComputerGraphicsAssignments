@@ -48,11 +48,11 @@
 #include "Camera.h"
 #include "PerspectiveCamera.h"
 #include "OrthographicCamera.h"
-#include "FirstPersonCamera.h"
+
 #include "GamePadComponent.h"
 #include "KeyboardComponent.h"
 #include "MouseComponent.h"
-#include "FpsComponent.h"
+
 #include "RenderStateHelper.h"
 #include "ServiceContainer.h"
 #include "..\Library\ModelMaterial.h"

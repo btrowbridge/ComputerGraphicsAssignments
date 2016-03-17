@@ -16,7 +16,6 @@ namespace Rendering
 	}
 	void ModelDemo::Initialize()
 	{
-
 		
 		// Load a compiled vertex shader
 		std::vector<char> compiledVertexShader;
@@ -44,7 +43,7 @@ namespace Rendering
 		Mesh* mesh = model->Meshes().at(0).get();
 
 		//vertex buffer
-		CreateVertexBuffer(mGame->Direct3DDevice(), *mesh, mIndexBuffer.GetAddressOf());
+		CreateVertexBuffer(mGame->Direct3DDevice(), *mesh, mVertexBuffer.GetAddressOf());
 
 		//indexbuffer
 		mesh->CreateIndexBuffer(*mGame->Direct3DDevice(),mIndexBuffer.ReleaseAndGetAddressOf());

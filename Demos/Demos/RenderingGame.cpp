@@ -10,9 +10,9 @@ namespace Rendering
 
 	void RenderingGame::Initialize(UINT screenWidth, UINT screenHeight, HWND windowHandle)
 	{
-		mCamera = make_shared<FirstPersonCamera>(*this);
+		mCamera = make_shared<PerspectiveCamera>(*this);
 		mComponents.push_back(mCamera);
-		mServices.AddService(FirstPersonCamera::TypeIdClass(), mCamera.get());
+		mServices.AddService(PerspectiveCamera::TypeIdClass(), mCamera.get());
 
 		mKeyboard = make_shared<KeyboardComponent>(*this);
 		mComponents.push_back(mKeyboard);
@@ -27,21 +27,22 @@ namespace Rendering
 		mServices.AddService(GamePadComponent::TypeIdClass(), mGamePad.get());
 
 		mModelDemo = make_shared<ModelDemo>(*this, mCamera);
+		mModelDemo->SetEnabled(true);
+		mModelDemo->SetVisible(true);
 		mComponents.push_back(mModelDemo);
-
+		
 		Game::Initialize(screenWidth, screenHeight, windowHandle);
 
 		mRenderStateHelper = make_shared<RenderStateHelper>(*this);
-		mFpsComponent = make_shared<FpsComponent>(*this);
-		mFpsComponent->Initialize();
 
-		mCamera->SetPosition(0.0f, 5.0f, 20.0f);
+
+		mCamera->SetPosition(0.0f, 0.0f, 20.0f);
 	}
 
 	void RenderingGame::Update(const Library::GameTime & gameTime)
 	{
-		mFpsComponent->Update(gameTime);
 
+		mCamera->Update(gameTime);
 		if (mKeyboard->WasKeyPressedThisFrame(Keys::Escape))
 		{
 			PostQuitMessage(0);
@@ -61,9 +62,9 @@ namespace Rendering
 		mDirect3DDeviceContext->ClearDepthStencilView(mDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 		Game::Draw(gameTime);
-
+		
 		mRenderStateHelper->SaveAll();
-		mFpsComponent->Draw(gameTime);
+
 		mRenderStateHelper->RestoreAll();
 
 		ThrowIfFailed(mSwapChain->Present(1, 0), "IDXGISwapChain::Present() failed.");

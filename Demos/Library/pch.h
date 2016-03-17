@@ -20,11 +20,10 @@
 #include <dxgi1_3.h>
 #include <DirectXMath.h>
 #include <DirectXColors.h>
+
 #include <GamePad.h>
 #include <Keyboard.h>
 #include <Mouse.h>
-#include <SpriteBatch.h>
-#include <SpriteFont.h>
 
 #include <DDSTextureLoader.h>
 #include <WICTextureLoader.h>
@@ -47,7 +46,6 @@
 #include "GamePadComponent.h"
 #include "KeyboardComponent.h"
 #include "MouseComponent.h"
-#include "FpsComponent.h"
 #include "RenderStateHelper.h"
 #include "ServiceContainer.h"
 #include "StreamHelper.h"
