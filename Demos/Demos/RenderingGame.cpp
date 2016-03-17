@@ -36,13 +36,63 @@ namespace Rendering
 		mRenderStateHelper = make_shared<RenderStateHelper>(*this);
 
 
-		mCamera->SetPosition(0.0f, 0.0f, 20.0f);
+		mCamera->SetPosition(0.0f, 0.0f, 50.0f);
 	}
 
 	void RenderingGame::Update(const Library::GameTime & gameTime)
 	{
+		static float zPos = 50.0f;
+		static float yPos = 0.0f;
+		static float xPos = 0.0f;
 
+		const float rateOfRotation = 1.0f;
+		static float yRotation = 0.0f;
+		static float xRotation = 0.0f;
+		
+		const float speed = 40.0f;
+
+		if(mKeyboard->IsKeyDown(Keys::W)) {
+			zPos -= speed * gameTime.ElapsedGameTimeSeconds().count();
+		} else if (mKeyboard->IsKeyDown(Keys::S)) {
+			zPos += speed * gameTime.ElapsedGameTimeSeconds().count();
+			
+		}
+
+		if (mKeyboard->IsKeyDown(Keys::D)) {
+			xPos += speed * gameTime.ElapsedGameTimeSeconds().count();
+		}
+		else if (mKeyboard->IsKeyDown(Keys::A)) {
+			xPos -= speed * gameTime.ElapsedGameTimeSeconds().count();
+		}
+
+		if (mKeyboard->IsKeyDown(Keys::Q)) {
+			yPos += speed * gameTime.ElapsedGameTimeSeconds().count();
+		}
+		else if (mKeyboard->IsKeyDown(Keys::E)) {
+			yPos -= speed * gameTime.ElapsedGameTimeSeconds().count();
+		}
+
+		if (mKeyboard->IsKeyDown(Keys::Up)) {
+			mCamera->ApplyRotation(XMMatrixRotationX(XMConvertToRadians(rateOfRotation)));
+
+		}
+		else if (mKeyboard->IsKeyDown(Keys::Down)) {
+			mCamera->ApplyRotation(XMMatrixRotationX(XMConvertToRadians(-rateOfRotation)));
+		}
+
+		if (mKeyboard->IsKeyDown(Keys::Left)) {
+			mCamera->ApplyRotation(XMMatrixRotationY(XMConvertToRadians(rateOfRotation)));
+
+		}
+		else if (mKeyboard->IsKeyDown(Keys::Right)) {
+			mCamera->ApplyRotation(XMMatrixRotationY(XMConvertToRadians(-rateOfRotation)));
+		}
+		
+		
+		mCamera->SetPosition(xPos, yPos, zPos);
+		
 		mCamera->Update(gameTime);
+
 		if (mKeyboard->WasKeyPressedThisFrame(Keys::Escape))
 		{
 			PostQuitMessage(0);

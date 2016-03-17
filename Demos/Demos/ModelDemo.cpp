@@ -38,7 +38,7 @@ namespace Rendering
 		
 		//load model
 
-		unique_ptr<Library::Model> model = make_unique<Library::Model>("Content\\Models\\Sphere.obj.bin");
+		unique_ptr<Library::Model> model = make_unique<Library::Model>("Content\\Models\\darkfighter6.obj.bin");
 
 		Mesh* mesh = model->Meshes().at(0).get();
 
@@ -58,7 +58,7 @@ namespace Rendering
 
 
 		//Load a texture
-		wstring textureName = L"Content\\Textures\\EarthComposite.dds";
+		wstring textureName = L"Content\\Textures\\Doge.dds";
 		ThrowIfFailed(CreateDDSTextureFromFile(mGame->Direct3DDevice(), textureName.c_str(), nullptr, mColorTexture.ReleaseAndGetAddressOf()), "CreateDDSTexture failed");
 		
 	}
@@ -126,7 +126,7 @@ namespace Rendering
 		direct3DDeviceContext->VSSetConstantBuffers(0, 1, mConstantBuffer.GetAddressOf());
 
 		direct3DDeviceContext->PSSetShaderResources(0, 1, mColorTexture.GetAddressOf());
-		direct3DDeviceContext->PSSetSamplers(0, 1, SamplerStates::TrilinearWrap.GetAddressOf());
+		direct3DDeviceContext->PSSetSamplers(0, 1, SamplerStates::TrilinearMirror.ReleaseAndGetAddressOf());
 		
 
 		direct3DDeviceContext->DrawIndexed(mIndexCount, 0, 0);
