@@ -19,46 +19,55 @@ namespace Rendering
 		
 		// Load a compiled vertex shader
 		std::vector<char> compiledVertexShader;
-		Utility::LoadBinaryFile(L"Content\\Shaders\\ModelDemoVS.cso", compiledVertexShader);
+		Utility::LoadBinaryFile(L"Content\\Shaders\\DiffuseLightingDemoVS.cso", compiledVertexShader);
 		ThrowIfFailed(mGame->Direct3DDevice()->CreateVertexShader(&compiledVertexShader[0], compiledVertexShader.size(), nullptr, mVertexShader.ReleaseAndGetAddressOf()), "ID3D11Device::CreatedVertexShader() failed.");
 
 		// Load a compiled pixel shader
 		std::vector<char> compiledPixelShader;
-		Utility::LoadBinaryFile(L"Content\\Shaders\\ModelDemoPS.cso", compiledPixelShader);
+		Utility::LoadBinaryFile(L"Content\\Shaders\\DiffuseLightingDemoPS.cso", compiledPixelShader);
 		ThrowIfFailed(mGame->Direct3DDevice()->CreatePixelShader(&compiledPixelShader[0], compiledPixelShader.size(), nullptr, mPixelShader.ReleaseAndGetAddressOf()), "ID3D11Device::CreatedPixelShader() failed.");
 
 		// Create an input layout
 		D3D11_INPUT_ELEMENT_DESC inputElementDescriptions[] =
 		{
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT,0, 0, D3D11_INPUT_PER_VERTEX_DATA,0 }
+		
 		};
 
 		ThrowIfFailed(mGame->Direct3DDevice()->CreateInputLayout(inputElementDescriptions, ARRAYSIZE(inputElementDescriptions), &compiledVertexShader[0], compiledVertexShader.size(), mInputLayout.ReleaseAndGetAddressOf()), "ID3D11Device::CreateInputLayout() failed.");
 		
 		//load model
 
-		unique_ptr<Library::Model> model = make_unique<Library::Model>("Content\\Models\\darkfighter6.obj.bin");
+		unique_ptr<Library::Model> model = make_unique<Library::Model>("Content\\Models\\Sphere.obj.bin");
+		for (UINT i = 0; i < model->Meshes().size(); i++) {
+			Mesh* mesh = model->Meshes().at(i).get();
 
-		Mesh* mesh = model->Meshes().at(0).get();
+			//vertex buffer
+			CreateVertexBuffer(mGame->Direct3DDevice(), *mesh, mVertexBuffer.GetAddressOf());
 
-		//vertex buffer
-		CreateVertexBuffer(mGame->Direct3DDevice(), *mesh, mVertexBuffer.GetAddressOf());
+			//indexbuffer
+			
+			mesh->CreateIndexBuffer(*mGame->Direct3DDevice(), mIndexBuffer.ReleaseAndGetAddressOf());
+			mIndexCount += static_cast<UINT>(mesh->Indices().size());
+		}
 
-		//indexbuffer
-		mesh->CreateIndexBuffer(*mGame->Direct3DDevice(),mIndexBuffer.ReleaseAndGetAddressOf());
-		mIndexCount = static_cast<UINT>(mesh->Indices().size());
-
-
+		
 		//Constant Buffer
 		D3D11_BUFFER_DESC constantBufferDesc = { 0 };
 		constantBufferDesc.ByteWidth = sizeof(CBufferPerObject);
 		constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		ThrowIfFailed(mGame->Direct3DDevice()->CreateBuffer(&constantBufferDesc, nullptr, mConstantBuffer.ReleaseAndGetAddressOf()), "ID3D11Device::CreateBuffer() failed.");
 
+		//Constant Buffer per frame
+		D3D11_BUFFER_DESC constantBufferFDesc = { 0 };
+		constantBufferFDesc.ByteWidth = sizeof(CBufferPerFrame);
+		constantBufferFDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		ThrowIfFailed(mGame->Direct3DDevice()->CreateBuffer(&constantBufferFDesc, nullptr, mConstantBufferF.ReleaseAndGetAddressOf()), "ID3D11Device::CreateBufferF() failed.");
 
 		//Load a texture
-		wstring textureName = L"Content\\Textures\\Doge.dds";
+		wstring textureName = L"Content\\Textures\\EarthComposite.dds";
 		ThrowIfFailed(CreateDDSTextureFromFile(mGame->Direct3DDevice(), textureName.c_str(), nullptr, mColorTexture.ReleaseAndGetAddressOf()), "CreateDDSTexture failed");
 		
 	}
@@ -95,8 +104,9 @@ namespace Rendering
 
 		D3D11_SUBRESOURCE_DATA vertexSubResourceData = { 0 };
 		vertexSubResourceData.pSysMem = &vertices[0];
+		
 		ThrowIfFailed(device->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, vertexBuffer), "ID3D11Device::CreateBuffer() failed.");
-
+		
 	}
 
 	void ModelDemo::Draw(const Library::GameTime & gameTime)
@@ -110,7 +120,6 @@ namespace Rendering
 		UINT stride = sizeof(VertexPositionTexture);
 		UINT offset = 0;
 		direct3DDeviceContext->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), &stride, &offset);
-
 		direct3DDeviceContext->IASetIndexBuffer(mIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
 
@@ -120,14 +129,25 @@ namespace Rendering
 		XMMATRIX worldMatrix = XMLoadFloat4x4(&mWorldMatrix);
 		XMMATRIX wvp = worldMatrix * mCamera->ViewProjectionMatrix();
 		wvp = XMMatrixTranspose(wvp);
+		XMStoreFloat4x4(&mCBufferPerObject.World, worldMatrix);
 		XMStoreFloat4x4(&mCBufferPerObject.WorldViewProjection, wvp);
 
 		direct3DDeviceContext->UpdateSubresource(mConstantBuffer.Get(), 0, nullptr, &mCBufferPerObject, 0,0);
 		direct3DDeviceContext->VSSetConstantBuffers(0, 1, mConstantBuffer.GetAddressOf());
 
+
 		direct3DDeviceContext->PSSetShaderResources(0, 1, mColorTexture.GetAddressOf());
 		direct3DDeviceContext->PSSetSamplers(0, 1, SamplerStates::TrilinearMirror.ReleaseAndGetAddressOf());
+
+		XMVECTOR ambientLight = { 0.5f,0.0f,0.0f,1.0f };
+		XMVECTOR directionLight = { 1.0f,0.0f,0.0f, 0.0f};
 		
+
+		XMStoreFloat4(&mCBufferPerFrame.AmbientColor, ambientLight);
+		XMStoreFloat4(&mCBufferPerFrame.DirectionLight, directionLight);
+
+		direct3DDeviceContext->UpdateSubresource(mConstantBufferF.Get(), 0, nullptr, &mCBufferPerFrame, 0, 0);
+		direct3DDeviceContext->PSSetConstantBuffers(0, 1, mConstantBufferF.GetAddressOf());
 
 		direct3DDeviceContext->DrawIndexed(mIndexCount, 0, 0);
 	}
@@ -135,6 +155,7 @@ namespace Rendering
 	void ModelDemo::Update(const Library::GameTime & gameTime)
 	{
 		
+
 
 		if (mAnimationEnabled) {
 			const float rateOfChange = 30.0f;

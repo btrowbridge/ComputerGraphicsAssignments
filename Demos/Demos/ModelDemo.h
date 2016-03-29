@@ -32,11 +32,21 @@ namespace Rendering
 		struct CBufferPerObject
 		{
 			DirectX::XMFLOAT4X4 WorldViewProjection;
+			DirectX::XMFLOAT4X4 World;
 
-			CBufferPerObject() : WorldViewProjection() {}
-			CBufferPerObject(const DirectX::XMFLOAT4X4 wvp) :WorldViewProjection(wvp) {}
+			CBufferPerObject() : WorldViewProjection(),World() {}
+			CBufferPerObject(const DirectX::XMFLOAT4X4 wvp, const DirectX::XMFLOAT4X4 w) :WorldViewProjection(wvp),World(w) {}
 		};
+		struct CBufferPerFrame
+		{
+			DirectX::XMFLOAT4 DirectionLight;
+			DirectX::XMFLOAT4 AmbientColor;
 
+			CBufferPerFrame() : DirectionLight(), AmbientColor() {}
+			CBufferPerFrame(const DirectX::XMFLOAT4 dl, const DirectX::XMFLOAT4 ac) : DirectionLight(dl), AmbientColor(ac) {}
+
+
+		};
 
 		Microsoft::WRL::ComPtr<ID3D11VertexShader> mVertexShader;
 		Microsoft::WRL::ComPtr<ID3D11PixelShader> mPixelShader;
@@ -44,7 +54,12 @@ namespace Rendering
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mVertexBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mIndexBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mConstantBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> mConstantBufferF;
+
 		CBufferPerObject mCBufferPerObject;
+		CBufferPerFrame mCBufferPerFrame;
+		DirectX::XMFLOAT3 mLightDirection;
+		DirectX::XMFLOAT3 mAmbientColor;
 		DirectX::XMFLOAT4X4 mWorldMatrix;
 
 		UINT mIndexCount;

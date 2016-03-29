@@ -41,6 +41,11 @@ namespace Rendering
 
 	void RenderingGame::Update(const Library::GameTime & gameTime)
 	{
+
+		if (mKeyboard->IsKeyDown(Keys::R)) {
+			mCamera->SetPosition(0.0f, 0.0f, 50.0f);
+		}
+
 		static float zPos = 50.0f;
 		static float yPos = 0.0f;
 		static float xPos = 0.0f;
@@ -55,7 +60,6 @@ namespace Rendering
 			zPos -= speed * gameTime.ElapsedGameTimeSeconds().count();
 		} else if (mKeyboard->IsKeyDown(Keys::S)) {
 			zPos += speed * gameTime.ElapsedGameTimeSeconds().count();
-			
 		}
 
 		if (mKeyboard->IsKeyDown(Keys::D)) {
@@ -74,7 +78,6 @@ namespace Rendering
 
 		if (mKeyboard->IsKeyDown(Keys::Up)) {
 			mCamera->ApplyRotation(XMMatrixRotationX(XMConvertToRadians(rateOfRotation)));
-
 		}
 		else if (mKeyboard->IsKeyDown(Keys::Down)) {
 			mCamera->ApplyRotation(XMMatrixRotationX(XMConvertToRadians(-rateOfRotation)));
@@ -82,7 +85,6 @@ namespace Rendering
 
 		if (mKeyboard->IsKeyDown(Keys::Left)) {
 			mCamera->ApplyRotation(XMMatrixRotationY(XMConvertToRadians(rateOfRotation)));
-
 		}
 		else if (mKeyboard->IsKeyDown(Keys::Right)) {
 			mCamera->ApplyRotation(XMMatrixRotationY(XMConvertToRadians(-rateOfRotation)));
