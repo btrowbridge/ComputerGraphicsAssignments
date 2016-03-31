@@ -26,6 +26,8 @@ namespace Rendering
 		virtual void CreateVertexBuffer(ID3D11Device* device, const Mesh& mesh, ID3D11Buffer** vertexBuffer) const;
 
 		virtual void Initialize() override;
+		void SetDirectionLight(float x, float y, float z);
+		void SetAmbientColor(float r, float b, float g, float a);
 		virtual void Draw(const Library::GameTime& gameTime) override;
 		virtual void Update(const Library::GameTime& gameTime) override;
 	private:

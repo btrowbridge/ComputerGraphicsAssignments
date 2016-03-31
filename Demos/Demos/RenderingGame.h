@@ -37,5 +37,7 @@ namespace Rendering
 
 		std::shared_ptr<Library::RenderStateHelper> mRenderStateHelper;
 		std::shared_ptr<ModelDemo> mModelDemo;
+
+		
 	};
 }

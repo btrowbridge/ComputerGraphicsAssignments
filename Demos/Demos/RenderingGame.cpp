@@ -41,10 +41,26 @@ namespace Rendering
 
 	void RenderingGame::Update(const Library::GameTime & gameTime)
 	{
+		static const float mScreenWidth = 1024.0f;
+		static const float mScreenHeight = 768.0f;
+		static const float maxMag = sqrt(mScreenHeight * mScreenHeight + mScreenWidth * mScreenWidth) / 2;
 
-		if (mKeyboard->IsKeyDown(Keys::R)) {
-			mCamera->SetPosition(0.0f, 0.0f, 50.0f);
+		static float r = 1.0f;
+		static float b = 1.0f;
+		static float g = 1.0f;
+		float xMouse = static_cast<float>(mMouse->X() - mScreenWidth/2)/(mScreenWidth/2);
+		float yMouse = static_cast<float>(mMouse->Y() - mScreenHeight/2)/(mScreenHeight/2);
+		float mag = sqrt(xMouse * xMouse + yMouse * yMouse);
+
+		mModelDemo->SetDirectionLight( xMouse, 0.0f,- yMouse);
+		
+		if (mMouse->WasButtonPressedThisFrame(MouseButtons::Left)) {
+			r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+			b = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+			g = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 		}
+		mModelDemo->SetAmbientColor(r, g, b, - log(mag));
+
 
 		static float zPos = 50.0f;
 		static float yPos = 0.0f;

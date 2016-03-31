@@ -69,17 +69,24 @@ namespace Rendering
 		ThrowIfFailed(CreateDDSTextureFromFile(mGame->Direct3DDevice(), textureName.c_str(), nullptr, mColorTexture.ReleaseAndGetAddressOf()), "CreateDDSTexture failed");
 		
 		//Lighting
-		XMVECTOR ambientLight = { 1.0f,1.0f,0.0f,0.5f };
-		XMVECTOR directionLight = { 1.0f,0.0f,0.0f, 0.0f };
+		XMVECTOR ambientColor = { 0.5f,0.0f,0.0f,1.0f };
+		XMVECTOR directionLight = { 1.0f,0.0f,1.0f, 0.0f };
 
 
-		XMStoreFloat4(&mCBufferPerFrame.AmbientColor, ambientLight);
+		XMStoreFloat4(&mCBufferPerFrame.AmbientColor, ambientColor);
 		XMStoreFloat4(&mCBufferPerFrame.DirectionLight, directionLight);
 
 		mGame->Direct3DDeviceContext()->UpdateSubresource(mConstantBufferPS.Get(), 0, nullptr, &mCBufferPerFrame, 0, 0);
 
 	}
-
+	void ModelDemo::SetDirectionLight(float x, float y, float z) {
+		mCBufferPerFrame.DirectionLight = XMFLOAT4(x, y, z, 0.0f);
+		mGame->Direct3DDeviceContext()->UpdateSubresource(mConstantBufferPS.Get(), 0, nullptr, &mCBufferPerFrame, 0, 0);
+	}
+	void ModelDemo::SetAmbientColor(float r, float b, float g, float a) {
+		mCBufferPerFrame.AmbientColor = XMFLOAT4(r, b, g, a);
+		mGame->Direct3DDeviceContext()->UpdateSubresource(mConstantBufferPS.Get(), 0, nullptr, &mCBufferPerFrame, 0, 0);
+	}
 	void ModelDemo::SetAnimationEnabled(bool isEnabled)
 	{
 		mAnimationEnabled = isEnabled;
@@ -138,6 +145,7 @@ namespace Rendering
 		XMMATRIX worldMatrix = XMLoadFloat4x4(&mWorldMatrix);
 		XMMATRIX wvp = worldMatrix * mCamera->ViewProjectionMatrix();
 		wvp = XMMatrixTranspose(wvp);
+		worldMatrix = XMMatrixTranspose(worldMatrix);
 		XMStoreFloat4x4(&mCBufferPerObject.World, worldMatrix);
 		XMStoreFloat4x4(&mCBufferPerObject.WorldViewProjection, wvp);
 
@@ -155,6 +163,8 @@ namespace Rendering
 
 	void ModelDemo::Update(const Library::GameTime & gameTime)
 	{
+
+		
 		if (mAnimationEnabled) {
 			const float rateOfChange = 30.0f;
 			static float yRotation = 0.0f;
