@@ -44,8 +44,6 @@ namespace Rendering
 
 			CBufferPerFrame() : DirectionLight(), AmbientColor() {}
 			CBufferPerFrame(const DirectX::XMFLOAT4 dl, const DirectX::XMFLOAT4 ac) : DirectionLight(dl), AmbientColor(ac) {}
-
-
 		};
 
 		Microsoft::WRL::ComPtr<ID3D11VertexShader> mVertexShader;
@@ -53,8 +51,8 @@ namespace Rendering
 		Microsoft::WRL::ComPtr<ID3D11InputLayout> mInputLayout;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mVertexBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mIndexBuffer;
-		Microsoft::WRL::ComPtr<ID3D11Buffer> mConstantBuffer;
-		Microsoft::WRL::ComPtr<ID3D11Buffer> mConstantBufferF;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> mConstantBufferVS;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> mConstantBufferPS;
 
 		CBufferPerObject mCBufferPerObject;
 		CBufferPerFrame mCBufferPerFrame;

@@ -32,7 +32,7 @@ namespace Rendering
 		{
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT,0, 0, D3D11_INPUT_PER_VERTEX_DATA,0 }
+			{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT,0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA,0 }
 		
 		};
 
@@ -58,18 +58,26 @@ namespace Rendering
 		D3D11_BUFFER_DESC constantBufferDesc = { 0 };
 		constantBufferDesc.ByteWidth = sizeof(CBufferPerObject);
 		constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		ThrowIfFailed(mGame->Direct3DDevice()->CreateBuffer(&constantBufferDesc, nullptr, mConstantBuffer.ReleaseAndGetAddressOf()), "ID3D11Device::CreateBuffer() failed.");
+		ThrowIfFailed(mGame->Direct3DDevice()->CreateBuffer(&constantBufferDesc, nullptr, mConstantBufferVS.ReleaseAndGetAddressOf()), "ID3D11Device::CreateBuffer() failed.");
 
 		//Constant Buffer per frame
-		D3D11_BUFFER_DESC constantBufferFDesc = { 0 };
-		constantBufferFDesc.ByteWidth = sizeof(CBufferPerFrame);
-		constantBufferFDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		ThrowIfFailed(mGame->Direct3DDevice()->CreateBuffer(&constantBufferFDesc, nullptr, mConstantBufferF.ReleaseAndGetAddressOf()), "ID3D11Device::CreateBufferF() failed.");
+		constantBufferDesc.ByteWidth = sizeof(CBufferPerFrame);
+		ThrowIfFailed(mGame->Direct3DDevice()->CreateBuffer(&constantBufferDesc, nullptr, mConstantBufferPS.ReleaseAndGetAddressOf()), "ID3D11Device::CreateBufferF() failed.");
 
 		//Load a texture
 		wstring textureName = L"Content\\Textures\\EarthComposite.dds";
 		ThrowIfFailed(CreateDDSTextureFromFile(mGame->Direct3DDevice(), textureName.c_str(), nullptr, mColorTexture.ReleaseAndGetAddressOf()), "CreateDDSTexture failed");
 		
+		//Lighting
+		XMVECTOR ambientLight = { 1.0f,1.0f,0.0f,0.5f };
+		XMVECTOR directionLight = { 1.0f,0.0f,0.0f, 0.0f };
+
+
+		XMStoreFloat4(&mCBufferPerFrame.AmbientColor, ambientLight);
+		XMStoreFloat4(&mCBufferPerFrame.DirectionLight, directionLight);
+
+		mGame->Direct3DDeviceContext()->UpdateSubresource(mConstantBufferPS.Get(), 0, nullptr, &mCBufferPerFrame, 0, 0);
+
 	}
 
 	void ModelDemo::SetAnimationEnabled(bool isEnabled)
@@ -84,21 +92,22 @@ namespace Rendering
 
 	void ModelDemo::CreateVertexBuffer(ID3D11Device* device, const Mesh& mesh, ID3D11Buffer** vertexBuffer) const {
 		const std::vector < XMFLOAT3 >& sourceVertices = mesh.Vertices();
+		const std::vector < XMFLOAT3 >& sourceNormals = mesh.Normals();
 		const auto& sourceUVs = mesh.TextureCoordinates().at(0);
 
-		std::vector <VertexPositionTexture> vertices;
+		std::vector <VertexPositionTextureNormal> vertices;
 		vertices.reserve(sourceVertices.size());
 		for (UINT i = 0; i < sourceVertices.size(); i++) {
 
 			const XMFLOAT3& position = sourceVertices.at(i);
 			const XMFLOAT3& uv = sourceUVs->at(i);
-			
-			vertices.push_back(VertexPositionTexture(XMFLOAT4(position.x, position.y, position.z, 1.0f), XMFLOAT2(uv.x, uv.y)));
+			const XMFLOAT3& normal = sourceNormals.at(i);
+			vertices.push_back(VertexPositionTextureNormal(XMFLOAT4(position.x, position.y, position.z, 1.0f), XMFLOAT2(uv.x, uv.y),normal));
 
 		}
 		//Vertex Buffer
 		D3D11_BUFFER_DESC vertexBufferDesc = { 0 };
-		vertexBufferDesc.ByteWidth = sizeof(VertexPositionTexture) * static_cast<UINT>(vertices.size());
+		vertexBufferDesc.ByteWidth = sizeof(VertexPositionTextureNormal) * static_cast<UINT>(vertices.size());
 		vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
@@ -117,7 +126,7 @@ namespace Rendering
 		direct3DDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		direct3DDeviceContext->IASetInputLayout(mInputLayout.Get());
 
-		UINT stride = sizeof(VertexPositionTexture);
+		UINT stride = sizeof(VertexPositionTextureNormal);
 		UINT offset = 0;
 		direct3DDeviceContext->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), &stride, &offset);
 		direct3DDeviceContext->IASetIndexBuffer(mIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
@@ -132,31 +141,20 @@ namespace Rendering
 		XMStoreFloat4x4(&mCBufferPerObject.World, worldMatrix);
 		XMStoreFloat4x4(&mCBufferPerObject.WorldViewProjection, wvp);
 
-		direct3DDeviceContext->UpdateSubresource(mConstantBuffer.Get(), 0, nullptr, &mCBufferPerObject, 0,0);
-		direct3DDeviceContext->VSSetConstantBuffers(0, 1, mConstantBuffer.GetAddressOf());
+		direct3DDeviceContext->UpdateSubresource(mConstantBufferVS.Get(), 0, nullptr, &mCBufferPerObject, 0,0);
+		direct3DDeviceContext->VSSetConstantBuffers(0, 1, mConstantBufferVS.GetAddressOf());
 
 
 		direct3DDeviceContext->PSSetShaderResources(0, 1, mColorTexture.GetAddressOf());
 		direct3DDeviceContext->PSSetSamplers(0, 1, SamplerStates::TrilinearMirror.ReleaseAndGetAddressOf());
 
-		XMVECTOR ambientLight = { 0.5f,0.0f,0.0f,1.0f };
-		XMVECTOR directionLight = { 1.0f,0.0f,0.0f, 0.0f};
-		
-
-		XMStoreFloat4(&mCBufferPerFrame.AmbientColor, ambientLight);
-		XMStoreFloat4(&mCBufferPerFrame.DirectionLight, directionLight);
-
-		direct3DDeviceContext->UpdateSubresource(mConstantBufferF.Get(), 0, nullptr, &mCBufferPerFrame, 0, 0);
-		direct3DDeviceContext->PSSetConstantBuffers(0, 1, mConstantBufferF.GetAddressOf());
+		direct3DDeviceContext->PSSetConstantBuffers(0, 1, mConstantBufferPS.GetAddressOf());
 
 		direct3DDeviceContext->DrawIndexed(mIndexCount, 0, 0);
 	}
 
 	void ModelDemo::Update(const Library::GameTime & gameTime)
 	{
-		
-
-
 		if (mAnimationEnabled) {
 			const float rateOfChange = 30.0f;
 			static float yRotation = 0.0f;
@@ -166,7 +164,5 @@ namespace Rendering
 
 			XMStoreFloat4x4(&mWorldMatrix, XMMatrixRotationY(XMConvertToRadians(yRotation)));
 		}
-		
-		
 	}
 }

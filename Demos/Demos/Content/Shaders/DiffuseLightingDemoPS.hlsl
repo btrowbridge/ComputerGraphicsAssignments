@@ -5,14 +5,7 @@ cbuffer CBufferPerFrame
 
 };
 
-SamplerState ColorSampler 
-{ 
-	Filter = MIN_MAG_MIP_LINEAR; 
-	AddressU = WRAP; 
-	AddressV = WRAP; 
-};
-
-
+SamplerState ColorSampler;
 Texture2D ColorTexture;
 
 struct VS_OUTPUT
@@ -34,7 +27,7 @@ float4 main(VS_OUTPUT IN) : SV_TARGET
 	float3 ambient = color.rgb * AmbientColor.rbg * AmbientColor.a;
 	float3 diffuse = color.rgb * saturate(n_dot_l);
 
-	float4 OUT = float4(ambient + diffuse, color.a);
+	float4 OUT = float4(saturate(ambient + diffuse), color.a);
 	
 
 	return OUT;
