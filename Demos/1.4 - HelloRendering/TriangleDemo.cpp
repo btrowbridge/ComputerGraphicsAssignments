@@ -21,7 +21,7 @@ namespace Rendering
 		std::vector<char> compiledPixelShader;
 		Utility::LoadBinaryFile(L"Content\\Shaders\\TriangleDemoPS.cso", compiledPixelShader);
 		ThrowIfFailed(mGame->Direct3DDevice()->CreatePixelShader(&compiledPixelShader[0], compiledPixelShader.size(), nullptr, mPixelShader.ReleaseAndGetAddressOf()), "ID3D11Device::CreatedPixelShader() failed.");
-	
+
 		// Create an input layout
 		D3D11_INPUT_ELEMENT_DESC inputElementDescriptions[] =
 		{

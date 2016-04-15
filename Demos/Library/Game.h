@@ -18,10 +18,10 @@ namespace Library
 {
 	class GameComponent;
 
-    class Game
-    {
-    public:
-        Game() = default;
+	class Game
+	{
+	public:
+		Game() = default;
 		virtual ~Game() = default;
 
 		Game(const Game& rhs) = delete;
@@ -31,7 +31,7 @@ namespace Library
 		ID3D11DeviceContext2* Direct3DDeviceContext() const;
 		IDXGISwapChain1* SwapChain() const;
 		ID3D11RenderTargetView* RenderTargetView() const;
-		ID3D11DepthStencilView* DepthStencilView() const;		
+		ID3D11DepthStencilView* DepthStencilView() const;
 		const D3D11_VIEWPORT& Viewport() const;
 
 		const std::vector<std::shared_ptr<GameComponent>>& Components() const;
@@ -44,7 +44,7 @@ namespace Library
 	protected:
 		virtual void Update(const GameTime& gameTime);
 		virtual void Draw(const GameTime& gameTime);
-				
+
 		Microsoft::WRL::ComPtr<ID3D11Device2> mDirect3DDevice;
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext2> mDirect3DDeviceContext;
 		Microsoft::WRL::ComPtr<IDXGISwapChain1> mSwapChain;
@@ -57,5 +57,5 @@ namespace Library
 		GameTime mGameTime;
 		std::vector<std::shared_ptr<GameComponent>> mComponents;
 		ServiceContainer mServices;
-    };
+	};
 }

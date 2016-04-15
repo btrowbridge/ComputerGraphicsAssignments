@@ -65,7 +65,6 @@ namespace Library
 		return (mData.Materials.size() > 0);
 	}
 
-
 	const vector<shared_ptr<Mesh>>& Model::Meshes() const
 	{
 		return mData.Meshes;

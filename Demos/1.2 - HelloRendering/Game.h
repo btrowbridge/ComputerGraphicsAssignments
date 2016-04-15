@@ -13,10 +13,10 @@ namespace Library
 {
 	class GameTime;
 
-    class Game
-    {
-    public:
-        Game();
+	class Game
+	{
+	public:
+		Game();
 		~Game() = default;
 		Game(const Game& rhs) = delete;
 		Game& operator=(const Game& rhs) = delete;
@@ -28,8 +28,8 @@ namespace Library
 	private:
 		void Update();
 		void Draw();
-    
-        static const DirectX::XMVECTORF32 BackgroundColor;
+
+		static const DirectX::XMVECTORF32 BackgroundColor;
 
 		D3D_FEATURE_LEVEL mFeatureLevel;
 		Microsoft::WRL::ComPtr<ID3D11Device1> mDirect3DDevice;
@@ -37,5 +37,5 @@ namespace Library
 		Microsoft::WRL::ComPtr<IDXGISwapChain1> mSwapChain;
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mRenderTargetView;
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mDepthStencilView;
-    };
+	};
 }

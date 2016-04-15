@@ -30,11 +30,10 @@ namespace Rendering
 		mModelDemo->SetEnabled(true);
 		mModelDemo->SetVisible(true);
 		mComponents.push_back(mModelDemo);
-		
+
 		Game::Initialize(screenWidth, screenHeight, windowHandle);
 
 		mRenderStateHelper = make_shared<RenderStateHelper>(*this);
-
 
 		mCamera->SetPosition(0.0f, 0.0f, 50.0f);
 	}
@@ -48,19 +47,18 @@ namespace Rendering
 		static float r = 1.0f;
 		static float b = 1.0f;
 		static float g = 1.0f;
-		float xMouse = static_cast<float>(mMouse->X() - mScreenWidth/2)/(mScreenWidth/2);
-		float yMouse = static_cast<float>(mMouse->Y() - mScreenHeight/2)/(mScreenHeight/2);
+		float xMouse = static_cast<float>(mMouse->X() - mScreenWidth / 2) / (mScreenWidth / 2);
+		float yMouse = static_cast<float>(mMouse->Y() - mScreenHeight / 2) / (mScreenHeight / 2);
 		float mag = sqrt(xMouse * xMouse + yMouse * yMouse);
 
-		mModelDemo->SetDirectionLight( xMouse, 0.0f,- yMouse);
-		
+		mModelDemo->SetDirectionLight(xMouse, 0.0f, -yMouse);
+
 		if (mMouse->WasButtonPressedThisFrame(MouseButtons::Left)) {
 			r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 			b = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 			g = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 		}
-		mModelDemo->SetAmbientColor(r, g, b, - log(mag));
-
+		mModelDemo->SetAmbientColor(r, g, b, -log(mag));
 
 		static float zPos = 50.0f;
 		static float yPos = 0.0f;
@@ -69,12 +67,13 @@ namespace Rendering
 		const float rateOfRotation = 1.0f;
 		static float yRotation = 0.0f;
 		static float xRotation = 0.0f;
-		
+
 		const float speed = 40.0f;
 
-		if(mKeyboard->IsKeyDown(Keys::W)) {
+		if (mKeyboard->IsKeyDown(Keys::W)) {
 			zPos -= speed * gameTime.ElapsedGameTimeSeconds().count();
-		} else if (mKeyboard->IsKeyDown(Keys::S)) {
+		}
+		else if (mKeyboard->IsKeyDown(Keys::S)) {
 			zPos += speed * gameTime.ElapsedGameTimeSeconds().count();
 		}
 
@@ -105,10 +104,9 @@ namespace Rendering
 		else if (mKeyboard->IsKeyDown(Keys::Right)) {
 			mCamera->ApplyRotation(XMMatrixRotationY(XMConvertToRadians(-rateOfRotation)));
 		}
-		
-		
+
 		mCamera->SetPosition(xPos, yPos, zPos);
-		
+
 		mCamera->Update(gameTime);
 
 		if (mKeyboard->WasKeyPressedThisFrame(Keys::Escape))
@@ -130,7 +128,7 @@ namespace Rendering
 		mDirect3DDeviceContext->ClearDepthStencilView(mDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 		Game::Draw(gameTime);
-		
+
 		mRenderStateHelper->SaveAll();
 
 		mRenderStateHelper->RestoreAll();

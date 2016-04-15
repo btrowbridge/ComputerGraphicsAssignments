@@ -22,7 +22,7 @@ VS_OUTPUT main(VS_INPUT IN)
 
 	OUT.Position = mul(IN.ObjectPosition, WorldViewProjection);
 
-	OUT.Color = IN.Color;
+	OUT.TextureCoordinates = IN.TextureCoordinates;
 
 	return OUT;
 }

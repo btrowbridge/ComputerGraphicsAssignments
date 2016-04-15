@@ -72,7 +72,7 @@ namespace Rendering
 		D3D11_SUBRESOURCE_DATA vertexSubResourceData = { 0 };
 		vertexSubResourceData.pSysMem = vertices;
 		ThrowIfFailed(mGame->Direct3DDevice()->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, mVertexBuffer.ReleaseAndGetAddressOf()), "ID3D11Device::CreateBuffer() failed.");
-	
+
 		// Create an index buffer
 		uint32_t indices[] =
 		{
@@ -139,7 +139,7 @@ namespace Rendering
 
 		direct3DDeviceContext->VSSetShader(mVertexShader.Get(), nullptr, 0);
 		direct3DDeviceContext->PSSetShader(mPixelShader.Get(), nullptr, 0);
-		
+
 		XMMATRIX worldMatrix = XMLoadFloat4x4(&mWorldMatrix);
 		XMMATRIX wvp = worldMatrix * mCamera->ViewProjectionMatrix();
 		wvp = XMMatrixTranspose(wvp);

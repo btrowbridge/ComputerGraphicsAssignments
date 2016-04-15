@@ -7,9 +7,9 @@
 
 namespace Library
 {
-    class Game;
-    class Mesh;
-    class ModelMaterial;
+	class Game;
+	class Mesh;
+	class ModelMaterial;
 	class OutputStreamHelper;
 	class InputStreamHelper;
 
@@ -26,9 +26,9 @@ namespace Library
 		~ModelData() = default;
 	};
 
-    class Model
-    {
-    public:
+	class Model
+	{
+	public:
 		Model() = default;
 		Model(const std::string& filename);
 		Model(std::ifstream& file);
@@ -36,10 +36,10 @@ namespace Library
 		Model(Model&& rhs);
 		Model& operator=(Model&& rhs);
 
-        bool HasMeshes() const;
-        bool HasMaterials() const;
-		
-        const std::vector<std::shared_ptr<Mesh>>& Meshes() const;
+		bool HasMeshes() const;
+		bool HasMaterials() const;
+
+		const std::vector<std::shared_ptr<Mesh>>& Meshes() const;
 		const std::vector<std::shared_ptr<ModelMaterial>>& Materials() const;
 
 		ModelData& Data();
@@ -47,10 +47,10 @@ namespace Library
 		void Save(const std::string& filename) const;
 		void Save(std::ofstream& file) const;
 
-    private:
+	private:
 		void Load(const std::string& filename);
 		void Load(std::ifstream& file);
 
 		ModelData mData;
-    };
+	};
 }

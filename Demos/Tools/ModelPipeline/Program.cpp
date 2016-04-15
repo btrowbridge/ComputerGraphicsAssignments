@@ -19,13 +19,13 @@ int main(int argc, char* argv[])
 
 		string inputFile = argv[1];
 		string inputFilename;
-		string inputDirectory;			
+		string inputDirectory;
 		Library::Utility::GetFileNameAndDirectory(inputFile, inputDirectory, inputFilename);
 
-		SetCurrentDirectory(Library::Utility::ToWideString(inputDirectory).c_str());		
+		SetCurrentDirectory(Library::Utility::ToWideString(inputDirectory).c_str());
 		Model model = ModelProcessor::LoadModel(inputFilename, true);
-		
-		string outputFilename = inputFilename + ".bin";		
+
+		string outputFilename = inputFilename + ".bin";
 		model.Save(outputFilename);
 	}
 	catch (exception ex)

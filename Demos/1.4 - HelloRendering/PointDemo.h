@@ -8,7 +8,7 @@ namespace Rendering
 {
 	class PointDemo : public Library::DrawableGameComponent
 	{
-	public:		
+	public:
 		PointDemo(Library::Game& game);
 		PointDemo(const PointDemo& rhs) = delete;
 		PointDemo& operator=(const PointDemo& rhs) = delete;

@@ -13,11 +13,11 @@ namespace Library
 
 namespace ModelPipeline
 {
-    class ModelProcessor
-    {
-    public:
+	class ModelProcessor
+	{
+	public:
 		ModelProcessor() = delete;
 
 		static Library::Model LoadModel(const std::string& filename, bool flipUVs = false);
-    };
+	};
 }

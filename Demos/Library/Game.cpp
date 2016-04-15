@@ -50,7 +50,7 @@ namespace Library
 	{
 		UINT createDeviceFlags = 0;
 
-#if defined(DEBUG) || defined(_DEBUG)  
+#if defined(DEBUG) || defined(_DEBUG)
 		createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
@@ -147,7 +147,7 @@ namespace Library
 		mViewport = CD3D11_VIEWPORT(0.0f, 0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight));
 		mDirect3DDeviceContext->OMSetRenderTargets(1, mRenderTargetView.GetAddressOf(), mDepthStencilView.Get());
 		mDirect3DDeviceContext->RSSetViewports(1, &mViewport);
-	
+
 		mGameClock.Reset();
 
 		for (auto& component : mComponents)
@@ -186,8 +186,8 @@ namespace Library
 		}
 	}
 
-    void Game::Draw(const GameTime& gameTime)
-    {
+	void Game::Draw(const GameTime& gameTime)
+	{
 		for (auto& component : mComponents)
 		{
 			DrawableGameComponent* drawableGameComponent = component->As<DrawableGameComponent>();
@@ -196,5 +196,5 @@ namespace Library
 				drawableGameComponent->Draw(gameTime);
 			}
 		}
-    }
+	}
 }

@@ -24,6 +24,6 @@ namespace Library
 
 		Utility() = delete;
 		Utility(const Utility& rhs) = delete;
-		Utility& operator=(const Utility& rhs) = delete;		
+		Utility& operator=(const Utility& rhs) = delete;
 	};
 }

@@ -1,0 +1,233 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="Camera.h">
+      <Filter>Cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="OrthographicCamera.h">
+      <Filter>Cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="PerspectiveCamera.h">
+      <Filter>Cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="GamePadComponent.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyboardComponent.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseComponent.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelMaterial.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="FirstPersonCamera.h">
+      <Filter>Cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorHelper.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawableGameComponent.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="FpsComponent.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="GameClock.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="GameComponent.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="GameException.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="GameTime.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Grid.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="MatrixHelper.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="ProxyModel.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderStateHelper.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="RTTI.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="SamplerStates.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="ServiceContainer.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="StreamHelper.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="VectorHelper.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexDeclarations.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="RasterizerStates.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="BlendStates.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="SpotLight.h">
+      <Filter>Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectionalLight.h">
+      <Filter>Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Lights</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Camera.cpp">
+      <Filter>Cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="OrthographicCamera.cpp">
+      <Filter>Cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="PerspectiveCamera.cpp">
+      <Filter>Cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyboardComponent.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="MouseComponent.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="GamePadComponent.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Models</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Models</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelMaterial.cpp">
+      <Filter>Models</Filter>
+    </ClCompile>
+    <ClCompile Include="FirstPersonCamera.cpp">
+      <Filter>Cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorHelper.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawableGameComponent.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="FpsComponent.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="GameClock.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="GameComponent.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="GameException.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="GameTime.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="Grid.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="MatrixHelper.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="ProxyModel.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderStateHelper.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="SamplerStates.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="ServiceContainer.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="StreamHelper.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="VectorHelper.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="RasterizerStates.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="BlendStates.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="SpotLight.cpp">
+      <Filter>Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectionalLight.cpp">
+      <Filter>Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Lights</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Cameras">
+      <UniqueIdentifier>{ccc38caa-dc9d-4a0a-8f0c-282744c997ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{4ab67d5b-2c59-45ff-a76b-2db81bd68389}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Models">
+      <UniqueIdentifier>{1771e755-e55e-4f93-8a20-931526548661}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Misc">
+      <UniqueIdentifier>{b60aab4e-8d22-4d46-89e6-21f6ed02a02c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lights">
+      <UniqueIdentifier>{6e17fc9b-c76a-4150-a5d7-afe09d3ffff3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>

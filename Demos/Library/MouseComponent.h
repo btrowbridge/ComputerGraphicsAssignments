@@ -32,7 +32,7 @@ namespace Library
 
 	public:
 		static DirectX::Mouse* Mouse();
-		
+
 		MouseComponent(Game& game, MouseModes mode = MouseModes::Absolute);
 		MouseComponent(const MouseComponent& rhs) = delete;
 

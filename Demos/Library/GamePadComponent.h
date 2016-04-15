@@ -30,7 +30,7 @@ namespace Library
 
 	public:
 		static DirectX::GamePad* GamePad();
-		
+
 		GamePadComponent(Game& game, int player);
 		GamePadComponent(const GamePadComponent& rhs) = delete;
 
@@ -56,6 +56,6 @@ namespace Library
 
 		int mPlayer;
 		DirectX::GamePad::State mCurrentState;
-		DirectX::GamePad::State mLastState;		
+		DirectX::GamePad::State mLastState;
 	};
 }

@@ -118,7 +118,7 @@ void InitializeDirectX()
 {
 	UINT createDeviceFlags = 0;
 
-#if defined(DEBUG) || defined(_DEBUG)  
+#if defined(DEBUG) || defined(_DEBUG)
 	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
@@ -240,7 +240,7 @@ void Shutdown(const wstring& className)
 
 	ReleaseObject(mRenderTargetView);
 	ReleaseObject(mDepthStencilView);
-	ReleaseObject(mSwapChain);	
+	ReleaseObject(mSwapChain);
 	ReleaseObject(mDirect3DDeviceContext);
 	ReleaseObject(mDirect3DDevice);
 

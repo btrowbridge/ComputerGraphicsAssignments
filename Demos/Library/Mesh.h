@@ -8,8 +8,8 @@
 
 namespace Library
 {
-    class Material;
-    class ModelMaterial;
+	class Material;
+	class ModelMaterial;
 	class OutputStreamHelper;
 	class InputStreamHelper;
 
@@ -37,9 +37,9 @@ namespace Library
 		void Clear();
 	};
 
-    class Mesh
-    {
-    public:
+	class Mesh
+	{
+	public:
 		Mesh(Model& model, InputStreamHelper& streamHelper);
 		Mesh(Model& model, MeshData&& meshData);
 		Mesh(const Mesh& rhs) = delete;
@@ -47,9 +47,9 @@ namespace Library
 		Mesh(Mesh&& rhs);
 		Mesh& operator=(Mesh&& rhs);
 
-        Model& GetModel();
-        std::shared_ptr<ModelMaterial> GetMaterial();
-        const std::string& Name() const;
+		Model& GetModel();
+		std::shared_ptr<ModelMaterial> GetMaterial();
+		const std::string& Name() const;
 
 		const std::vector<DirectX::XMFLOAT3>& Vertices() const;
 		const std::vector<DirectX::XMFLOAT3>& Normals() const;
@@ -60,13 +60,13 @@ namespace Library
 		std::uint32_t FaceCount() const;
 		const std::vector<std::uint32_t>& Indices() const;
 
-        void CreateIndexBuffer(ID3D11Device& device, ID3D11Buffer** indexBuffer);
+		void CreateIndexBuffer(ID3D11Device& device, ID3D11Buffer** indexBuffer);
 		void Save(OutputStreamHelper& streamHelper) const;
 
-    private:
+	private:
 		void Load(InputStreamHelper& streamHelper);
 
-        Model* mModel;
+		Model* mModel;
 		MeshData mData;
-    };
+	};
 }

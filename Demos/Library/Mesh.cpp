@@ -336,7 +336,7 @@ void Mesh::Load(InputStreamHelper& streamHelper)
 		}
 	}
 
-	// Deserialize indexes	
+	// Deserialize indexes
 	streamHelper >> mData.FaceCount;
 	uint32_t indexCount;
 	streamHelper >> indexCount;

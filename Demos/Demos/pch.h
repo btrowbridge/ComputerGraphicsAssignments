@@ -60,9 +60,11 @@
 #include "..\Library\Mesh.h"
 #include "SamplerStates.h"
 
-
 // Local
 #include "RenderingGame.h"
 #include "CubeDemo.h"
 #include "ColoredTriangleDemo.h"
 #include "ModelDemo.h"
+#include "SpecularLightingDemo.h"
+#include "PointLightDemo.h"
+#include "SpotlightDemo.h"

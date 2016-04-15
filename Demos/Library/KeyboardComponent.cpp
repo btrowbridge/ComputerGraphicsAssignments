@@ -7,7 +7,7 @@ namespace Library
 {
 	RTTI_DEFINITIONS(KeyboardComponent)
 
-	unique_ptr<DirectX::Keyboard> KeyboardComponent::sKeyboard(new DirectX::Keyboard);
+		unique_ptr<DirectX::Keyboard> KeyboardComponent::sKeyboard(new DirectX::Keyboard);
 
 	DirectX::Keyboard* KeyboardComponent::Keyboard()
 	{

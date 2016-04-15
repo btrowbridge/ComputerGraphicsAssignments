@@ -31,21 +31,42 @@ namespace Rendering
 		virtual void Draw(const Library::GameTime& gameTime) override;
 		virtual void Update(const Library::GameTime& gameTime) override;
 	private:
-		struct CBufferPerObject
+		struct CBufferPerObjectVS
 		{
 			DirectX::XMFLOAT4X4 WorldViewProjection;
 			DirectX::XMFLOAT4X4 World;
 
-			CBufferPerObject() : WorldViewProjection(),World() {}
-			CBufferPerObject(const DirectX::XMFLOAT4X4 wvp, const DirectX::XMFLOAT4X4 w) :WorldViewProjection(wvp),World(w) {}
+			CBufferPerObjectVS() : WorldViewProjection(), World() {}
+			CBufferPerObjectVS(const DirectX::XMFLOAT4X4 wvp, const DirectX::XMFLOAT4X4 w) :WorldViewProjection(wvp), World(w) {}
 		};
-		struct CBufferPerFrame
+		struct CBufferPerFrameVS
+		{
+			DirectX::XMFLOAT3 CameraPosition;
+			float Padding;
+			DirectX::XMFLOAT3 LightPosition;
+			float LightRadius;
+
+			CBufferPerFrameVS() : CameraPosition(), LightPosition(), Padding(), LightRadius(){}
+			CBufferPerFrameVS(const DirectX::XMFLOAT3 cd, const DirectX::XMFLOAT3 lp, const float lr) : CameraPosition(cd), LightPosition(lp), Padding(), LightRadius(lr) {}
+		};
+
+		struct CBufferPerObjectPS
+		{
+			DirectX::XMFLOAT3 SpecularColor;
+			float SpecularPower;
+
+			CBufferPerObjectPS() : SpecularColor(), SpecularPower() {}
+			CBufferPerObjectPS(const DirectX::XMFLOAT3 sc, const float sp) : SpecularColor(sc), SpecularPower(sp) {}
+		};
+		struct CBufferPerFramePS
 		{
 			DirectX::XMFLOAT4 DirectionLight;
 			DirectX::XMFLOAT4 AmbientColor;
+			DirectX::XMFLOAT3 LightColor;
+			float Padding;
 
-			CBufferPerFrame() : DirectionLight(), AmbientColor() {}
-			CBufferPerFrame(const DirectX::XMFLOAT4 dl, const DirectX::XMFLOAT4 ac) : DirectionLight(dl), AmbientColor(ac) {}
+			CBufferPerFramePS() : DirectionLight(), AmbientColor(), LightColor(), Padding() {}
+			CBufferPerFramePS(const DirectX::XMFLOAT4 dl, const DirectX::XMFLOAT4 ac, const DirectX::XMFLOAT3 lc) : DirectionLight(dl), AmbientColor(ac), LightColor(lc), Padding() {}
 		};
 
 		Microsoft::WRL::ComPtr<ID3D11VertexShader> mVertexShader;
@@ -53,11 +74,16 @@ namespace Rendering
 		Microsoft::WRL::ComPtr<ID3D11InputLayout> mInputLayout;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mVertexBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mIndexBuffer;
-		Microsoft::WRL::ComPtr<ID3D11Buffer> mConstantBufferVS;
-		Microsoft::WRL::ComPtr<ID3D11Buffer> mConstantBufferPS;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> mConstantBufferPerFrameVS;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> mConstantBufferPerFramePS;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> mConstantBufferPerObjectVS;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> mConstantBufferPerObjectPS;
 
-		CBufferPerObject mCBufferPerObject;
-		CBufferPerFrame mCBufferPerFrame;
+		CBufferPerFrameVS mCBufferPerFrameVS;
+		CBufferPerObjectVS mCBufferPerObjectVS;
+		CBufferPerFramePS mCBufferPerFramePS;
+		CBufferPerObjectPS mCBufferPerObjectPS;
+
 		DirectX::XMFLOAT3 mLightDirection;
 		DirectX::XMFLOAT3 mAmbientColor;
 		DirectX::XMFLOAT4X4 mWorldMatrix;

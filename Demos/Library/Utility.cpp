@@ -23,7 +23,7 @@ namespace Library
 	void Utility::GetFileName(const std::string& inputPath, std::string& filename)
 	{
 		std::string fullPath(inputPath);
-		std::replace(fullPath.begin(),fullPath.end(),'\\','/');
+		std::replace(fullPath.begin(), fullPath.end(), '\\', '/');
 
 		std::string::size_type lastSlashIndex = fullPath.find_last_of('/');
 
@@ -33,14 +33,14 @@ namespace Library
 		}
 		else
 		{
-			filename = fullPath.substr(lastSlashIndex + 1, fullPath.size() - lastSlashIndex- 1);
+			filename = fullPath.substr(lastSlashIndex + 1, fullPath.size() - lastSlashIndex - 1);
 		}
 	}
 
 	void Utility::GetDirectory(const std::string& inputPath, std::string& directory)
 	{
 		std::string fullPath(inputPath);
-		std::replace(fullPath.begin(),fullPath.end(),'\\','/');
+		std::replace(fullPath.begin(), fullPath.end(), '\\', '/');
 
 		std::string::size_type lastSlashIndex = fullPath.find_last_of('/');
 
@@ -49,7 +49,7 @@ namespace Library
 			directory = "";
 		}
 		else
-		{		
+		{
 			directory = fullPath.substr(0, lastSlashIndex);
 		}
 	}
@@ -57,7 +57,7 @@ namespace Library
 	void Utility::GetFileNameAndDirectory(const std::string& inputPath, std::string& directory, std::string& filename)
 	{
 		std::string fullPath(inputPath);
-		std::replace(fullPath.begin(),fullPath.end(),'\\','/');
+		std::replace(fullPath.begin(), fullPath.end(), '\\', '/');
 
 		std::string::size_type lastSlashIndex = fullPath.find_last_of('/');
 
@@ -69,10 +69,10 @@ namespace Library
 		else
 		{
 			directory = fullPath.substr(0, lastSlashIndex);
-			filename = fullPath.substr(lastSlashIndex + 1, fullPath.size() - lastSlashIndex- 1);
+			filename = fullPath.substr(lastSlashIndex + 1, fullPath.size() - lastSlashIndex - 1);
 		}
 	}
-	
+
 	void Utility::LoadBinaryFile(const std::wstring& filename, std::vector<char>& data)
 	{
 		std::ifstream file(filename.c_str(), std::ios::binary);
@@ -87,7 +87,7 @@ namespace Library
 		if (size > 0)
 		{
 			data.resize(size);
-			file.seekg(0, std::ios::beg);			
+			file.seekg(0, std::ios::beg);
 			file.read(&data.front(), size);
 		}
 

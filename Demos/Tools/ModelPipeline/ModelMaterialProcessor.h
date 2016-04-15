@@ -12,15 +12,15 @@ namespace Library
 
 namespace ModelPipeline
 {
-    class ModelMaterialProcessor
-    {
-    public:
+	class ModelMaterialProcessor
+	{
+	public:
 		ModelMaterialProcessor() = delete;
-		
+
 		static std::shared_ptr<Library::ModelMaterial> LoadModelMaterial(Library::Model& model, aiMaterial& material);
 
 	private:
-        static void InitializeTextureTypeMappings();
-        static std::map<Library::TextureType, UINT> sTextureTypeMappings;
-    };
+		static void InitializeTextureTypeMappings();
+		static std::map<Library::TextureType, UINT> sTextureTypeMappings;
+	};
 }

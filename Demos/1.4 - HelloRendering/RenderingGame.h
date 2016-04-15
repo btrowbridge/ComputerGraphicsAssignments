@@ -19,7 +19,7 @@ namespace Rendering
 		virtual void Initialize(UINT screenWidth, UINT screenHeight, HWND windowHandle) override;
 		virtual void Update(const Library::GameTime& gameTime) override;
 		virtual void Draw(const Library::GameTime& gameTime) override;
-		
+
 	private:
 		static const DirectX::XMVECTORF32 BackgroundColor;
 

@@ -6,17 +6,17 @@ using namespace Microsoft::WRL;
 
 namespace Library
 {
-    const XMVECTORF32 Game::BackgroundColor = Colors::CornflowerBlue;
+	const XMVECTORF32 Game::BackgroundColor = Colors::CornflowerBlue;
 
-    Game::Game()
-    {
-    }
+	Game::Game()
+	{
+	}
 
 	void Game::Initialize(UINT screenWidth, UINT screenHeight, HWND windowHandle)
 	{
 		UINT createDeviceFlags = 0;
 
-#if defined(DEBUG) || defined(_DEBUG)  
+#if defined(DEBUG) || defined(_DEBUG)
 		createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
@@ -133,8 +133,6 @@ namespace Library
 		mSwapChain = nullptr;
 		mDirect3DDeviceContext = nullptr;
 		mDirect3DDevice = nullptr;
-
-	
 	}
 
 	void Game::Update()
@@ -142,13 +140,13 @@ namespace Library
 		//TODO: Game-specific code
 	}
 
-    void Game::Draw()
-    {
-        mDirect3DDeviceContext->ClearRenderTargetView(mRenderTargetView.Get(), reinterpret_cast<const float*>(&BackgroundColor));
-        mDirect3DDeviceContext->ClearDepthStencilView(mDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	void Game::Draw()
+	{
+		mDirect3DDeviceContext->ClearRenderTargetView(mRenderTargetView.Get(), reinterpret_cast<const float*>(&BackgroundColor));
+		mDirect3DDeviceContext->ClearDepthStencilView(mDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 		//TODO: Game-specific code
-		
+
 		ThrowIfFailed(mSwapChain->Present(0, 0), "IDXGISwapChain::Present() failed.");
-    }
+	}
 }

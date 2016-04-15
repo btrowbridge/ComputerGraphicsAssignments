@@ -46,7 +46,7 @@ namespace Rendering
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mVertexBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mIndexBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mConstantBuffer;
-		DirectX::XMFLOAT4X4 mWorldMatrix;		
+		DirectX::XMFLOAT4X4 mWorldMatrix;
 		CBufferPerObject mCBufferPerObject;
 		std::uint32_t mIndexCount;
 		bool mAnimationEnabled;

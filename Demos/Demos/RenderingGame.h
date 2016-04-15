@@ -26,18 +26,16 @@ namespace Rendering
 		virtual void Initialize(UINT screenWidth, UINT screenHeight, HWND windowHandle) override;
 		virtual void Update(const Library::GameTime& gameTime) override;
 		virtual void Draw(const Library::GameTime& gameTime) override;
-		
+
 	private:
 		static const DirectX::XMVECTORF32 BackgroundColor;
 
 		std::shared_ptr<Library::Camera> mCamera;
-		std::shared_ptr<Library::KeyboardComponent> mKeyboard;		
+		std::shared_ptr<Library::KeyboardComponent> mKeyboard;
 		std::shared_ptr<Library::MouseComponent> mMouse;
 		std::shared_ptr<Library::GamePadComponent> mGamePad;
 
 		std::shared_ptr<Library::RenderStateHelper> mRenderStateHelper;
 		std::shared_ptr<ModelDemo> mModelDemo;
-
-		
 	};
 }

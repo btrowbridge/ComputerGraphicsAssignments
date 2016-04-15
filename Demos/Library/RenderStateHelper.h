@@ -5,46 +5,46 @@
 
 namespace Library
 {
-    class Game;
+	class Game;
 
-    class RenderStateHelper final
-    {
-    public:
-        RenderStateHelper(Game& game);
-        ~RenderStateHelper();
+	class RenderStateHelper final
+	{
+	public:
+		RenderStateHelper(Game& game);
+		~RenderStateHelper();
 
 		RenderStateHelper(const RenderStateHelper& rhs) = delete;
 		RenderStateHelper& operator=(const RenderStateHelper& rhs) = delete;
 
-        static void ResetAll(ID3D11DeviceContext* deviceContext);
+		static void ResetAll(ID3D11DeviceContext* deviceContext);
 		static void ResetRasterizerState(ID3D11DeviceContext* deviceContext);
 		static void ResetBlendState(ID3D11DeviceContext* deviceContext);
 		static void ResetDepthStencilState(ID3D11DeviceContext* deviceContext);
 
-        ID3D11RasterizerState* RasterizerState();
-        ID3D11BlendState* BlendState();
-        ID3D11DepthStencilState* DepthStencilState();
+		ID3D11RasterizerState* RasterizerState();
+		ID3D11BlendState* BlendState();
+		ID3D11DepthStencilState* DepthStencilState();
 
-        void SaveRasterizerState();
-        void RestoreRasterizerState() const;
+		void SaveRasterizerState();
+		void RestoreRasterizerState() const;
 
-        void SaveBlendState();
-        void RestoreBlendState() const;
+		void SaveBlendState();
+		void RestoreBlendState() const;
 
-        void SaveDepthStencilState();
-        void RestoreDepthStencilState() const;
+		void SaveDepthStencilState();
+		void RestoreDepthStencilState() const;
 
-        void SaveAll();
-        void RestoreAll() const;
+		void SaveAll();
+		void RestoreAll() const;
 
-    private:
-        Game& mGame;
+	private:
+		Game& mGame;
 
 		Microsoft::WRL::ComPtr<ID3D11RasterizerState> mRasterizerState;
 		Microsoft::WRL::ComPtr<ID3D11BlendState> mBlendState;
-        FLOAT* mBlendFactor;
-        UINT mSampleMask;
+		FLOAT* mBlendFactor;
+		UINT mSampleMask;
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilState> mDepthStencilState;
-        UINT mStencilRef;
-    };
+		UINT mStencilRef;
+	};
 }

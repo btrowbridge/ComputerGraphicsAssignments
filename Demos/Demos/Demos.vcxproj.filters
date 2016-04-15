@@ -25,6 +25,24 @@
     <FxCompile Include="Content\Shaders\DiffuseLightingDemoVS.hlsl">
       <Filter>Content\Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="Content\Shaders\SpecularLightingDemoPS.hlsl">
+      <Filter>Content\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Content\Shaders\SpecularLightingDemoVS.hlsl">
+      <Filter>Content\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="PointLightPS.hlsl">
+      <Filter>Content\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="PointLightVS.hlsl">
+      <Filter>Content\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Content\Shaders\SpotLightPS.hlsl">
+      <Filter>Content\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Content\Shaders\SpotLightVS.hlsl">
+      <Filter>Content\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -39,6 +57,15 @@
     <ClCompile Include="ModelDemo.cpp">
       <Filter>Demos</Filter>
     </ClCompile>
+    <ClCompile Include="PointLightDemo.cpp">
+      <Filter>Demos</Filter>
+    </ClCompile>
+    <ClCompile Include="SpecularLightingDemo.cpp">
+      <Filter>Demos</Filter>
+    </ClCompile>
+    <ClCompile Include="SpotlightDemo.cpp">
+      <Filter>Demos</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -50,6 +77,15 @@
       <Filter>Demos</Filter>
     </ClInclude>
     <ClInclude Include="ModelDemo.h">
+      <Filter>Demos</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLightDemo.h">
+      <Filter>Demos</Filter>
+    </ClInclude>
+    <ClInclude Include="SpecularLightingDemo.h">
+      <Filter>Demos</Filter>
+    </ClInclude>
+    <ClInclude Include="SpotlightDemo.h">
       <Filter>Demos</Filter>
     </ClInclude>
   </ItemGroup>

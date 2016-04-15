@@ -4,7 +4,7 @@ using namespace Library;
 
 namespace Rendering
 {
-	PointDemo::PointDemo(Library::Game & game) : 
+	PointDemo::PointDemo(Library::Game & game) :
 		DrawableGameComponent(game), mVertexShader(), mPixelShader()
 	{
 	}
@@ -31,7 +31,7 @@ namespace Rendering
 
 		direct3DDeviceContext->VSSetShader(mVertexShader.Get(), nullptr, 0);
 		direct3DDeviceContext->PSSetShader(mPixelShader.Get(), nullptr, 0);
-		
+
 		direct3DDeviceContext->Draw(1, 0);
 	}
 }
