@@ -72,7 +72,7 @@ namespace Rendering
 			DirectX::XMFLOAT3 SpecularColor;
 			float SpecularPower;
 
-			PixelCBufferPerObject() : SpecularColor(DirectX::Colors::White), SpecularPower(0.5f) {};
+			PixelCBufferPerObject() : SpecularColor(DirectX::Colors::White), SpecularPower(25.0f) {};
 			PixelCBufferPerObject(DirectX::XMFLOAT3 sc,
 				float sp) : SpecularColor(sc), SpecularPower(sp) {};
 		};

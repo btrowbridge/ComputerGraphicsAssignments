@@ -8,6 +8,7 @@ namespace Rendering
 {
 	const float SpecularLightingDemo::ModelRotationRate = XM_PI;
 	const XMFLOAT2 SpecularLightingDemo::LightRotationRate = XMFLOAT2(XMConvertToRadians(500.0f), XMConvertToRadians(500.0f));
+	const float SpecularLightingDemo::LightModulationRate = UCHAR_MAX;
 
 	SpecularLightingDemo::SpecularLightingDemo(Game& game) :
 		DrawableGameComponent(game), mWorldMatrix(MatrixHelper::Identity), mIndexCount(0),
@@ -65,20 +66,32 @@ namespace Rendering
 		D3D11_BUFFER_DESC constantBufferDesc = { 0 };
 		constantBufferDesc.ByteWidth = sizeof(VertexCBufferPerObject);
 		constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		ThrowIfFailed(mGame->Direct3DDevice()->CreateBuffer(&constantBufferDesc, nullptr, mVSConstantBuffer.ReleaseAndGetAddressOf()), "ID3D11Device::CreateBuffer() failed.");
+		ThrowIfFailed(mGame->Direct3DDevice()->CreateBuffer(&constantBufferDesc, nullptr, mVSConstantBufferPO.ReleaseAndGetAddressOf()), "ID3D11Device::CreateBuffer() failed.");
+
+		constantBufferDesc.ByteWidth = sizeof(VertexCBufferPerFrame);
+		ThrowIfFailed(mGame->Direct3DDevice()->CreateBuffer(&constantBufferDesc, nullptr, mVSConstantBufferPF.ReleaseAndGetAddressOf()), "ID3D11Device::CreateBuffer() failed.");
 
 		constantBufferDesc.ByteWidth = sizeof(PixelCBufferPerFrame);
-		ThrowIfFailed(mGame->Direct3DDevice()->CreateBuffer(&constantBufferDesc, nullptr, mPSConstantBuffer.ReleaseAndGetAddressOf()), "ID3D11Device::CreateBuffer() failed.");
+		ThrowIfFailed(mGame->Direct3DDevice()->CreateBuffer(&constantBufferDesc, nullptr, mPSConstantBufferPF.ReleaseAndGetAddressOf()), "ID3D11Device::CreateBuffer() failed.");
+
+		constantBufferDesc.ByteWidth = sizeof(PixelCBufferPerObject);
+		ThrowIfFailed(mGame->Direct3DDevice()->CreateBuffer(&constantBufferDesc, nullptr, mPSConstantBufferPO.ReleaseAndGetAddressOf()), "ID3D11Device::CreateBuffer() failed.");
 
 		// Load a texture
-		wstring textureName = L"Content\\Textures\\EarthComposite.dds";
+		wstring textureName = L"Content\\Textures\\Earthatday.dds";
 		ThrowIfFailed(CreateDDSTextureFromFile(mGame->Direct3DDevice(), textureName.c_str(), nullptr, mColorTexture.ReleaseAndGetAddressOf()), "CreateDDSTextureFromFile() failed.");
 
 		// Update the pixel shader constant buffer
-		mGame->Direct3DDeviceContext()->UpdateSubresource(mPSConstantBuffer.Get(), 0, nullptr, &mPSCBufferPerFrame, 0, 0);
+		mGame->Direct3DDeviceContext()->UpdateSubresource(mPSConstantBufferPF.Get(), 0, nullptr, &mPSCBufferPerFrame, 0, 0);
 
 		mDirectionalLight = std::make_unique<DirectionalLight>(*mGame);
 		mPSCBufferPerFrame.LightDirection = mDirectionalLight->DirectionToLight();
+
+		mPSCBufferPerObject.SpecularPower = 25.0f;
+
+		XMStoreFloat3(&mPSCBufferPerObject.SpecularColor, DirectX::Colors::White);
+		XMStoreFloat4(&mPSCBufferPerFrame.AmbientColor, DirectX::Colors::Black);
+		XMStoreFloat4(&mPSCBufferPerFrame.LightColor, DirectX::Colors::White);
 
 		// Load a proxy model for the directional light
 		mProxyModel = make_unique<ProxyModel>(*mGame, mCamera, "Content\\Models\\DirectionalLightProxy.obj.bin", 0.5f);
@@ -122,6 +135,7 @@ namespace Rendering
 				}
 
 				UpdateAmbientLight(gameTime);
+				UpdateSpecularLight(gameTime);
 				UpdateDirectionalLight(gameTime, gamePadState);
 			}
 		}
@@ -152,9 +166,18 @@ namespace Rendering
 		XMStoreFloat4x4(&mVSCBufferPerObject.WorldViewProjection, wvp);
 		XMStoreFloat4x4(&mVSCBufferPerObject.World, XMMatrixTranspose(worldMatrix));
 
-		direct3DDeviceContext->UpdateSubresource(mVSConstantBuffer.Get(), 0, nullptr, &mVSCBufferPerObject, 0, 0);
-		direct3DDeviceContext->VSSetConstantBuffers(0, 1, mVSConstantBuffer.GetAddressOf());
-		direct3DDeviceContext->PSSetConstantBuffers(0, 1, mPSConstantBuffer.GetAddressOf());
+		mVSCBufferPerFrame.CameraPosition = mCamera->Position();
+
+		direct3DDeviceContext->UpdateSubresource(mVSConstantBufferPO.Get(), 0, nullptr, &mVSCBufferPerObject, 0, 0);
+		direct3DDeviceContext->UpdateSubresource(mPSConstantBufferPO.Get(), 0, nullptr, &mPSCBufferPerObject, 0, 0);
+		direct3DDeviceContext->UpdateSubresource(mVSConstantBufferPF.Get(), 0, nullptr, &mVSCBufferPerFrame, 0, 0);
+		direct3DDeviceContext->UpdateSubresource(mPSConstantBufferPF.Get(), 0, nullptr, &mPSCBufferPerFrame, 0, 0);
+
+		ID3D11Buffer* VertexShaderBuffers[] = { mVSConstantBufferPF.Get(), mVSConstantBufferPO.Get() };
+		direct3DDeviceContext->VSSetConstantBuffers(0, ARRAYSIZE(VertexShaderBuffers), VertexShaderBuffers);
+
+		ID3D11Buffer* PixelShaderBuffers[] = { mPSConstantBufferPF.Get(), mPSConstantBufferPO.Get() };
+		direct3DDeviceContext->PSSetConstantBuffers(0, ARRAYSIZE(PixelShaderBuffers), PixelShaderBuffers);
 
 		direct3DDeviceContext->PSSetShaderResources(0, 1, mColorTexture.GetAddressOf());
 		direct3DDeviceContext->PSSetSamplers(0, 1, SamplerStates::TrilinearWrap.GetAddressOf());
@@ -205,7 +228,7 @@ namespace Rendering
 			ambientIntensity = min(ambientIntensity, 1.0f);
 
 			mPSCBufferPerFrame.AmbientColor = XMFLOAT4(ambientIntensity, ambientIntensity, ambientIntensity, 1.0f);
-			mGame->Direct3DDeviceContext()->UpdateSubresource(mPSConstantBuffer.Get(), 0, nullptr, &mPSCBufferPerFrame, 0, 0);
+			mGame->Direct3DDeviceContext()->UpdateSubresource(mPSConstantBufferPF.Get(), 0, nullptr, &mPSCBufferPerFrame, 0, 0);
 		}
 		else if (mGamePad->IsButtonDown(GamePadButtons::X) && ambientIntensity > 0.0f)
 		{
@@ -213,7 +236,7 @@ namespace Rendering
 			ambientIntensity = max(ambientIntensity, 0.0f);
 
 			mPSCBufferPerFrame.AmbientColor = XMFLOAT4(ambientIntensity, ambientIntensity, ambientIntensity, 1.0f);
-			mGame->Direct3DDeviceContext()->UpdateSubresource(mPSConstantBuffer.Get(), 0, nullptr, &mPSCBufferPerFrame, 0, 0);
+			mGame->Direct3DDeviceContext()->UpdateSubresource(mPSConstantBufferPF.Get(), 0, nullptr, &mPSCBufferPerFrame, 0, 0);
 		}
 	}
 
@@ -230,7 +253,7 @@ namespace Rendering
 
 			mPSCBufferPerFrame.LightColor = XMFLOAT4(directionalIntensity, directionalIntensity, directionalIntensity, 1.0f);
 			mDirectionalLight->SetColor(mPSCBufferPerFrame.LightColor);
-			mGame->Direct3DDeviceContext()->UpdateSubresource(mPSConstantBuffer.Get(), 0, nullptr, &mPSCBufferPerFrame, 0, 0);
+			mGame->Direct3DDeviceContext()->UpdateSubresource(mPSConstantBufferPF.Get(), 0, nullptr, &mPSCBufferPerFrame, 0, 0);
 		}
 		else if (mGamePad->IsButtonDown(GamePadButtons::Y) && directionalIntensity > 0.0f)
 		{
@@ -239,7 +262,7 @@ namespace Rendering
 
 			mPSCBufferPerFrame.LightColor = XMFLOAT4(directionalIntensity, directionalIntensity, directionalIntensity, 1.0f);
 			mDirectionalLight->SetColor(mPSCBufferPerFrame.LightColor);
-			mGame->Direct3DDeviceContext()->UpdateSubresource(mPSConstantBuffer.Get(), 0, nullptr, &mPSCBufferPerFrame, 0, 0);
+			mGame->Direct3DDeviceContext()->UpdateSubresource(mPSConstantBufferPF.Get(), 0, nullptr, &mPSCBufferPerFrame, 0, 0);
 		}
 
 		if (mUseGamePadForDirectionalLight)
@@ -266,8 +289,46 @@ namespace Rendering
 				mDirectionalLight->ApplyRotation(lightRotationMatrix);
 				mProxyModel->ApplyRotation(lightRotationMatrix);
 				mPSCBufferPerFrame.LightDirection = mDirectionalLight->DirectionToLight();
-				mGame->Direct3DDeviceContext()->UpdateSubresource(mPSConstantBuffer.Get(), 0, nullptr, &mPSCBufferPerFrame, 0, 0);
+				mGame->Direct3DDeviceContext()->UpdateSubresource(mPSConstantBufferPF.Get(), 0, nullptr, &mPSCBufferPerFrame, 0, 0);
 			}
+		}
+	}
+
+	void SpecularLightingDemo::UpdateSpecularLight(const Library::GameTime & gameTime)
+	{
+		static float specularIntensity = 1.0f;
+
+		if (mGamePad->IsButtonDown(GamePadButtons::DPadLeft) && specularIntensity < 1.0f)
+		{
+			specularIntensity += static_cast<float>(gameTime.ElapsedGameTimeSeconds().count());
+			specularIntensity = min(specularIntensity, 1.0f);
+
+			mPSCBufferPerObject.SpecularColor = XMFLOAT3(specularIntensity, specularIntensity, specularIntensity);
+		}
+		else if (mGamePad->IsButtonDown(GamePadButtons::DPadRight) && specularIntensity > 0.0f)
+		{
+			specularIntensity -= (float)gameTime.ElapsedGameTimeSeconds().count();
+			specularIntensity = max(specularIntensity, 0.0f);
+
+			mPSCBufferPerObject.SpecularColor = XMFLOAT3(specularIntensity, specularIntensity, specularIntensity);
+		}
+
+		static float specularPower = mPSCBufferPerObject.SpecularPower;
+
+		if (mGamePad->IsButtonDown(GamePadButtons::DPadDown) && specularPower < UCHAR_MAX)
+		{
+			specularPower += LightModulationRate * static_cast<float>(gameTime.ElapsedGameTimeSeconds().count());
+			specularPower = min(specularPower, static_cast<float>(UCHAR_MAX));
+
+			mPSCBufferPerObject.SpecularPower = specularPower;
+		}
+
+		if (mGamePad->IsButtonDown(GamePadButtons::DPadUp) && specularPower > 1.0f)
+		{
+			specularPower -= LightModulationRate * static_cast<float>(gameTime.ElapsedGameTimeSeconds().count());
+			specularPower = max(specularPower, 1.0f);
+
+			mPSCBufferPerObject.SpecularPower = specularPower;
 		}
 	}
 

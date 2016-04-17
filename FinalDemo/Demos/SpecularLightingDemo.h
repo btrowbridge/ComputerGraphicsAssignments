@@ -79,23 +79,30 @@ namespace Rendering
 		void ToggleAnimation();
 		void UpdateAmbientLight(const Library::GameTime& gameTime);
 		void UpdateDirectionalLight(const Library::GameTime& gameTime, const DirectX::GamePad::State& gamePadState);
+		void UpdateSpecularLight(const Library::GameTime & gameTime);
 		void ToggleGamePadControls();
 
 		static const float ModelRotationRate;
 		static const DirectX::XMFLOAT2 LightRotationRate;
+		const static float LightModulationRate;
 
 		Microsoft::WRL::ComPtr<ID3D11VertexShader> mVertexShader;
 		Microsoft::WRL::ComPtr<ID3D11PixelShader> mPixelShader;
 		Microsoft::WRL::ComPtr<ID3D11InputLayout> mInputLayout;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mVertexBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mIndexBuffer;
-		Microsoft::WRL::ComPtr<ID3D11Buffer> mVSConstantBuffer;
-		Microsoft::WRL::ComPtr<ID3D11Buffer> mPSConstantBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> mVSConstantBufferPO;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> mPSConstantBufferPO;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> mVSConstantBufferPF;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> mPSConstantBufferPF;
 
 		DirectX::XMFLOAT4X4 mWorldMatrix;
 
 		VertexCBufferPerObject mVSCBufferPerObject;
+		VertexCBufferPerFrame mVSCBufferPerFrame;
 		PixelCBufferPerFrame mPSCBufferPerFrame;
+		PixelCBufferPerObject mPSCBufferPerObject;
+
 		std::uint32_t mIndexCount;
 		bool mAnimationEnabled;
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mColorTexture;

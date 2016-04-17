@@ -97,7 +97,7 @@ namespace Rendering
 		mVSCBufferPerFrame.CameraPosition = mCamera->Position();
 
 		mPSCBufferPerFrame.LightColor = ColorHelper::ToFloat4(mPointLight->Color(), true);
-		mPSCBufferPerObject.SpecularPower = 0.5f;
+		mPSCBufferPerObject.SpecularPower = 25.0f;
 
 		XMStoreFloat3(&mPSCBufferPerObject.SpecularColor, DirectX::Colors::White);
 		XMStoreFloat4(&mPSCBufferPerFrame.AmbientColor, DirectX::Colors::White);
@@ -187,10 +187,10 @@ namespace Rendering
 		direct3DDeviceContext->UpdateSubresource(mPSConstantBufferPF.Get(), 0, nullptr, &mPSCBufferPerFrame, 0, 0);
 
 		ID3D11Buffer* VertexShaderBuffers[] = { mVSConstantBufferPF.Get(), mVSConstantBufferPO.Get() };
-		direct3DDeviceContext->VSSetConstantBuffers(0, 2, VertexShaderBuffers);
+		direct3DDeviceContext->VSSetConstantBuffers(0, ARRAYSIZE(VertexShaderBuffers), VertexShaderBuffers);
 
 		ID3D11Buffer* PixelShaderBuffers[] = { mPSConstantBufferPF.Get(), mPSConstantBufferPO.Get() };
-		direct3DDeviceContext->PSSetConstantBuffers(0, 2, PixelShaderBuffers);
+		direct3DDeviceContext->PSSetConstantBuffers(0, ARRAYSIZE(PixelShaderBuffers), PixelShaderBuffers);
 
 		direct3DDeviceContext->PSSetShaderResources(0, 1, mColorTexture.GetAddressOf());
 		direct3DDeviceContext->PSSetSamplers(0, 1, SamplerStates::TrilinearWrap.GetAddressOf());
@@ -292,7 +292,7 @@ namespace Rendering
 	{
 		static float specularIntensity = 1.0f;
 
-		if (mGamePad->IsButtonDown(GamePadButtons::LeftShoulder) && specularIntensity < 1.0f)
+		if (mGamePad->IsButtonDown(GamePadButtons::DPadLeft) && specularIntensity < 1.0f)
 		{
 			specularIntensity += static_cast<float>(gameTime.ElapsedGameTimeSeconds().count());
 			specularIntensity = min(specularIntensity, 1.0f);
@@ -308,7 +308,7 @@ namespace Rendering
 
 		static float specularPower = mPSCBufferPerObject.SpecularPower;
 
-		if (mGamePad->IsButtonDown(GamePadButtons::DPadDown) && specularPower < UCHAR_MAX)
+		if (mGamePad->IsButtonDown(GamePadButtons::DPadRight) && specularPower < UCHAR_MAX)
 		{
 			specularPower += LightModulationRate * static_cast<float>(gameTime.ElapsedGameTimeSeconds().count());
 			specularPower = min(specularPower, static_cast<float>(UCHAR_MAX));

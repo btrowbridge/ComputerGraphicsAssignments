@@ -19,6 +19,8 @@ namespace Rendering
 {
 	class DiffuseLightingDemo;
 	class PointLightingDemo;
+	class SpecularLightingDemo;
+	class SpotlightLightingDemo;
 
 	class RenderingGame : public Library::Game
 	{
@@ -44,5 +46,7 @@ namespace Rendering
 		std::shared_ptr<Library::Grid> mGrid;
 		std::shared_ptr<DiffuseLightingDemo> mDiffuseLightingDemo;
 		std::shared_ptr<PointLightingDemo> mPointLightingDemo;
+		std::shared_ptr<SpecularLightingDemo> mSpecularLightingDemo;
+		std::shared_ptr<SpotlightLightingDemo> mSpotlightLightingDemo;
 	};
 }

@@ -46,8 +46,8 @@ float4 main(VS_OUTPUT IN) : SV_TARGET
 
 	float lightAngle = dot(LightLookAt, IN.LightDirection);
 	float lightAngleCoefficient = smoothstep(SpotLightOuterAngle, SpotLightInnerAngle, lightAngle);
-    float spotFactor = saturate(lightAngleCoefficient);
-    //float spotFactor = (lightAngle > 0.0f ? lightAngleCoefficient : 0.0);
+	float spotFactor = saturate(lightAngleCoefficient);
+	//float spotFactor = (lightAngle > 0.0f ? lightAngleCoefficient : 0.0);
 
 	return float4(saturate(ambient + spotFactor * IN.Attenuation * (diffuse + specular)), 1.0f);
 

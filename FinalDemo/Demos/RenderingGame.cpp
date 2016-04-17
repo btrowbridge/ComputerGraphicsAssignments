@@ -32,8 +32,14 @@ namespace Rendering
 		//mDiffuseLightingDemo = make_shared<DiffuseLightingDemo>(*this, mCamera);
 		//mComponents.push_back(mDiffuseLightingDemo);
 
-		mPointLightingDemo = make_shared<PointLightingDemo>(*this, mCamera);
-		mComponents.push_back(mPointLightingDemo);
+		//mPointLightingDemo = make_shared<PointLightingDemo>(*this, mCamera);
+		//mComponents.push_back(mPointLightingDemo);
+
+		//mSpecularLightingDemo = make_shared<SpecularLightingDemo>(*this, mCamera);
+		//mComponents.push_back(mSpecularLightingDemo);
+
+		mSpotlightLightingDemo = make_shared<SpotlightLightingDemo>(*this, mCamera);
+		mComponents.push_back(mSpotlightLightingDemo);
 		
 
 		Game::Initialize(screenWidth, screenHeight, windowHandle);
