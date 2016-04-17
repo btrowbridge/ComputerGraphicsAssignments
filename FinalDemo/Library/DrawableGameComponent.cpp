@@ -6,7 +6,7 @@ namespace Library
 {
 	RTTI_DEFINITIONS(DrawableGameComponent)
 
-	DrawableGameComponent::DrawableGameComponent() :
+		DrawableGameComponent::DrawableGameComponent() :
 		GameComponent(), mVisible(true)
 	{
 	}
@@ -35,7 +35,7 @@ namespace Library
 	{
 		return mCamera;
 	}
-	
+
 	void DrawableGameComponent::SetCamera(const std::shared_ptr<Camera>& camera)
 	{
 		mCamera = camera;

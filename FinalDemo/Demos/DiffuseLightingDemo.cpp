@@ -217,7 +217,7 @@ namespace Rendering
 		}
 	}
 
-	void DiffuseLightingDemo::UpdateDirectionalLight(const GameTime& gameTime, const GamePad::State& gamePadState)
+	void DiffuseLightingDemo::UpdateDirectionalLight(const GameTime& gameTime, const DirectX::GamePad::State& gamePadState)
 	{
 		static float directionalIntensity = mPSCBufferPerFrame.LightColor.x;
 		float elapsedTime = gameTime.ElapsedGameTimeSeconds().count();

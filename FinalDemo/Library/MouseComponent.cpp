@@ -7,7 +7,7 @@ namespace Library
 {
 	RTTI_DEFINITIONS(MouseComponent)
 
-	unique_ptr<Mouse> MouseComponent::sMouse(new DirectX::Mouse);
+		unique_ptr<Mouse> MouseComponent::sMouse(new DirectX::Mouse);
 
 	Mouse* MouseComponent::Mouse()
 	{
@@ -103,23 +103,23 @@ namespace Library
 	{
 		switch (button)
 		{
-			case Library::MouseButtons::Left:
-				return state.leftButton;
+		case Library::MouseButtons::Left:
+			return state.leftButton;
 
-			case Library::MouseButtons::Right:
-				return state.rightButton;
+		case Library::MouseButtons::Right:
+			return state.rightButton;
 
-			case Library::MouseButtons::Middle:
-				return state.middleButton;				
+		case Library::MouseButtons::Middle:
+			return state.middleButton;
 
-			case Library::MouseButtons::X1:
-				return state.xButton1;
+		case Library::MouseButtons::X1:
+			return state.xButton1;
 
-			case Library::MouseButtons::X2:
-				return state.xButton2;
+		case Library::MouseButtons::X2:
+			return state.xButton2;
 
-			default:
-				throw exception("Invalid MouseButtons.");
+		default:
+			throw exception("Invalid MouseButtons.");
 		}
 	}
 }

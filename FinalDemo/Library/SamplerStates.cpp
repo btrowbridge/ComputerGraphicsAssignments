@@ -30,9 +30,9 @@ namespace Library
 		samplerStateDesc.MaxLOD = FLT_MAX;
 		samplerStateDesc.MipLODBias = 0.0f;
 		samplerStateDesc.MaxAnisotropy = 1;
-		samplerStateDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;		
+		samplerStateDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
 		ThrowIfFailed(direct3DDevice->CreateSamplerState(&samplerStateDesc, TrilinearWrap.ReleaseAndGetAddressOf()), "ID3D11Device::CreateSamplerState() failed.");
-		
+
 		samplerStateDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 		samplerStateDesc.AddressU = D3D11_TEXTURE_ADDRESS_MIRROR;
 		samplerStateDesc.AddressV = D3D11_TEXTURE_ADDRESS_MIRROR;

@@ -6,7 +6,7 @@ namespace Library
 {
 	RTTI_DEFINITIONS(DirectionalLight)
 
-	DirectionalLight::DirectionalLight(Game& game) :
+		DirectionalLight::DirectionalLight(Game& game) :
 		Light(game), mDirection(Vector3Helper::Forward), mUp(Vector3Helper::Up), mRight(Vector3Helper::Right)
 	{
 	}
@@ -20,7 +20,7 @@ namespace Library
 	{
 		return XMFLOAT3(-mDirection.x, -mDirection.y, -mDirection.z);
 	}
-	
+
 	const XMFLOAT3& DirectionalLight::Up() const
 	{
 		return mUp;
@@ -45,34 +45,34 @@ namespace Library
 	{
 		return XMLoadFloat3(&mUp);
 	}
-	
+
 	XMVECTOR DirectionalLight::RightVector() const
 	{
 		return XMLoadFloat3(&mRight);
 	}
 
 	void DirectionalLight::ApplyRotation(CXMMATRIX transform)
-    {
-        XMVECTOR direction = XMLoadFloat3(&mDirection);
-        XMVECTOR up = XMLoadFloat3(&mUp);
-        
-        direction = XMVector3TransformNormal(direction, transform);
-        direction = XMVector3Normalize(direction);
+	{
+		XMVECTOR direction = XMLoadFloat3(&mDirection);
+		XMVECTOR up = XMLoadFloat3(&mUp);
 
-        up = XMVector3TransformNormal(up, transform);
-        up = XMVector3Normalize(up);
+		direction = XMVector3TransformNormal(direction, transform);
+		direction = XMVector3Normalize(direction);
 
-        XMVECTOR right = XMVector3Cross(direction, up);
-        up = XMVector3Cross(right, direction);
+		up = XMVector3TransformNormal(up, transform);
+		up = XMVector3Normalize(up);
 
-        XMStoreFloat3(&mDirection, direction);
-        XMStoreFloat3(&mUp, up);
-        XMStoreFloat3(&mRight, right);
-    }
+		XMVECTOR right = XMVector3Cross(direction, up);
+		up = XMVector3Cross(right, direction);
 
-    void DirectionalLight::ApplyRotation(const XMFLOAT4X4& transform)
-    {
-        XMMATRIX transformMatrix = XMLoadFloat4x4(&transform);
-        ApplyRotation(transformMatrix);
-    }
+		XMStoreFloat3(&mDirection, direction);
+		XMStoreFloat3(&mUp, up);
+		XMStoreFloat3(&mRight, right);
+	}
+
+	void DirectionalLight::ApplyRotation(const XMFLOAT4X4& transform)
+	{
+		XMMATRIX transformMatrix = XMLoadFloat4x4(&transform);
+		ApplyRotation(transformMatrix);
+	}
 }

@@ -25,12 +25,16 @@ namespace Rendering
 		mGamePad = make_shared<GamePadComponent>(*this, 0);
 		mComponents.push_back(mGamePad);
 		mServices.AddService(GamePadComponent::TypeIdClass(), mGamePad.get());
-		
+
 		mGrid = make_shared<Grid>(*this, mCamera);
 		mComponents.push_back(mGrid);
 
-		mDiffuseLightingDemo = make_shared<DiffuseLightingDemo>(*this, mCamera);
-		mComponents.push_back(mDiffuseLightingDemo);
+		//mDiffuseLightingDemo = make_shared<DiffuseLightingDemo>(*this, mCamera);
+		//mComponents.push_back(mDiffuseLightingDemo);
+
+		mPointLightingDemo = make_shared<PointLightingDemo>(*this, mCamera);
+		mComponents.push_back(mPointLightingDemo);
+		
 
 		Game::Initialize(screenWidth, screenHeight, windowHandle);
 
@@ -61,7 +65,7 @@ namespace Rendering
 		auto& gamePadState = mGamePad->CurrentState();
 		if (gamePadState.IsConnected())
 		{
-			if (mGamePad->WasButtonPressedThisFrame(GamePadButtons::DPadUp))
+			if (mGamePad->WasButtonPressedThisFrame(GamePadButtons::RightStick))
 			{
 				mGrid->SetEnabled(!mGrid->Enabled());
 				mGrid->SetVisible(!mGrid->Visible());

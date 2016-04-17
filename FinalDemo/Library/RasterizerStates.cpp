@@ -16,9 +16,9 @@ namespace Library
 		rasterizerStateDesc.FillMode = D3D11_FILL_SOLID;
 		rasterizerStateDesc.CullMode = D3D11_CULL_BACK;
 		rasterizerStateDesc.DepthClipEnable = true;
-		
+
 		ThrowIfFailed(direct3DDevice->CreateRasterizerState(&rasterizerStateDesc, BackCulling.GetAddressOf()), "ID3D11Device::CreateRasterizerState() failed.");
-		
+
 		ZeroMemory(&rasterizerStateDesc, sizeof(rasterizerStateDesc));
 		rasterizerStateDesc.FillMode = D3D11_FILL_SOLID;
 		rasterizerStateDesc.CullMode = D3D11_CULL_BACK;

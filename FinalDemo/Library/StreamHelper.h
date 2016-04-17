@@ -26,7 +26,7 @@ namespace Library
 		OutputStreamHelper& operator<<(const std::string& value);
 		OutputStreamHelper& operator<<(const DirectX::XMFLOAT4X4& value);
 		OutputStreamHelper& operator<<(bool value);
-		
+
 	private:
 		template <typename T>
 		void WriteObject(std::ostream& stream, T value);
@@ -51,7 +51,7 @@ namespace Library
 		InputStreamHelper& operator>>(std::string& value);
 		InputStreamHelper& operator>>(DirectX::XMFLOAT4X4& value);
 		InputStreamHelper& operator>>(bool& value);
-		
+
 	private:
 		template <typename T>
 		void ReadObject(std::istream& stream, T& value);

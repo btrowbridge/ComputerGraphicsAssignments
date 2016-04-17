@@ -31,4 +31,3 @@ namespace Library
 		DirectX::XMFLOAT3 mRight;
 	};
 }
-

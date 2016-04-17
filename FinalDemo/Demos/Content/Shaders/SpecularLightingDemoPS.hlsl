@@ -28,20 +28,20 @@ struct VS_OUTPUT
 
 float4 main(VS_OUTPUT IN) : SV_TARGET
 {
-	float n_dot_l = dot(In.Normal, lightDirection);
+	float n_dot_l = dot(IN.Normal, LightDirection.rgb);
 	float3 halfVector = normalize(LightDirection.rgb + IN.ViewDirection);
 	float n_dot_h = dot(IN.Normal, halfVector);
 
 	float4 lightCoefficients = lit(n_dot_l, n_dot_h, SpecularPower);
-	float specularClamp = SpecularMap.Sample(TextureSampler, In.TextureCoordinates).x;
-	float4 color =(ColorTexture.Sample(ColorSampler,IN.TextureCoordinates));
+	float specularClamp = SpecularMap.Sample(ColorSampler, IN.TextureCoordinates).w;
+	float3 color = (ColorTexture.Sample(ColorSampler,IN.TextureCoordinates).xyz);
 
 	float3 ambient = color.rgb * AmbientColor.rbg * AmbientColor.a;
 	float3 diffuse = color.rgb * saturate(n_dot_l) * LightColor;
-	float3 specular = min(lightCoefficient.z, specularClamp) * SpecularColor;
+	float3 specular = min(lightCoefficients.z, specularClamp) * SpecularColor;
 	
 
 
-	return float4(saturate(ambient + diffuse + specular), color.a);
+	return float4(saturate(ambient + diffuse + specular), 1.0);
 
 }

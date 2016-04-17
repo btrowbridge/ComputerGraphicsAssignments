@@ -192,7 +192,7 @@ namespace Library
 
 	public:
 		static DirectX::Keyboard* Keyboard();
-		
+
 		KeyboardComponent(Game& game);
 		KeyboardComponent(const KeyboardComponent& rhs) = delete;
 

@@ -17,7 +17,7 @@ namespace Library
 		static Microsoft::WRL::ComPtr<ID3D11SamplerState> DepthMap;
 		static Microsoft::WRL::ComPtr<ID3D11SamplerState> ShadowMap;
 		static Microsoft::WRL::ComPtr<ID3D11SamplerState> PcfShadowMap;
-		
+
 		static DirectX::XMVECTORF32 BorderColor;
 		static DirectX::XMVECTORF32 ShadowMapBorderColor;
 

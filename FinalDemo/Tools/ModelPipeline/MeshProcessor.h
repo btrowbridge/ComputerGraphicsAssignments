@@ -12,11 +12,11 @@ namespace Library
 
 namespace ModelPipeline
 {
-    class MeshProcessor
-    {
-    public:
+	class MeshProcessor
+	{
+	public:
 		MeshProcessor() = delete;
 
 		static std::shared_ptr<Library::Mesh> LoadMesh(Library::Model& model, aiMesh& mesh);
-    };
+	};
 }

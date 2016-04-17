@@ -25,4 +25,3 @@ namespace Library
 		DirectX::PackedVector::XMCOLOR mColor;
 	};
 }
-

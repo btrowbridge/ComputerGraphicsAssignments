@@ -11,10 +11,10 @@ namespace Library
 {
 	class Camera;
 	class Mesh;
-	class DirectionalLight;
+	class SpotLight;
 	class ProxyModel;
 	class KeyboardComponent;
-	class GamePadComponent;	
+	class GamePadComponent;
 }
 
 namespace Rendering

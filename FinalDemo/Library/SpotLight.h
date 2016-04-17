@@ -11,7 +11,7 @@ namespace Library
 	public:
 		SpotLight(Game& game);
 		virtual ~SpotLight() = default;
-	
+
 		const DirectX::XMFLOAT3& Direction() const;
 		DirectX::XMFLOAT3 DirectionToLight() const;
 		const DirectX::XMFLOAT3& Up() const;
@@ -24,7 +24,7 @@ namespace Library
 
 		float InnerAngle();
 		void SetInnerAngle(float value);
-		
+
 		float OuterAngle();
 		void SetOuterAngle(float value);
 

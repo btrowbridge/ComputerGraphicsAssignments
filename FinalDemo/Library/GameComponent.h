@@ -4,31 +4,31 @@
 
 namespace Library
 {
-    class Game;
-    class GameTime;
+	class Game;
+	class GameTime;
 
-    class GameComponent : public RTTI
-    {
-        RTTI_DECLARATIONS(GameComponent, RTTI)
+	class GameComponent : public RTTI
+	{
+		RTTI_DECLARATIONS(GameComponent, RTTI)
 
-    public:
-        GameComponent();
-        GameComponent(Game& game);
+	public:
+		GameComponent();
+		GameComponent(Game& game);
 		virtual ~GameComponent() = default;
 
 		GameComponent(const GameComponent& rhs) = delete;
 		GameComponent& operator=(const GameComponent& rhs) = delete;
 
-        Game* GetGame();
-        void SetGame(Game& game);
-        bool Enabled() const;
-        void SetEnabled(bool enabled);
+		Game* GetGame();
+		void SetGame(Game& game);
+		bool Enabled() const;
+		void SetEnabled(bool enabled);
 
-        virtual void Initialize();
-        virtual void Update(const GameTime& gameTime);
+		virtual void Initialize();
+		virtual void Update(const GameTime& gameTime);
 
-    protected:
-        Game* mGame;
-        bool mEnabled;
-    };
+	protected:
+		Game* mGame;
+		bool mEnabled;
+	};
 }

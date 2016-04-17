@@ -222,7 +222,7 @@ namespace Rendering
 		static float directionalIntensity = mPSCBufferPerFrame.LightColor.x;
 		float elapsedTime = gameTime.ElapsedGameTimeSeconds().count();
 
-		// Update directional light intensity		
+		// Update directional light intensity
 		if (mGamePad->IsButtonDown(GamePadButtons::B) && directionalIntensity < 1.0f)
 		{
 			directionalIntensity += elapsedTime;

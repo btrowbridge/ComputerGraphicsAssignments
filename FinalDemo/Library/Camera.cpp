@@ -4,17 +4,17 @@ using namespace DirectX;
 
 namespace Library
 {
-    RTTI_DEFINITIONS(Camera)
+	RTTI_DEFINITIONS(Camera)
 
-    const float Camera::DefaultNearPlaneDistance = 0.01f;
-    const float Camera::DefaultFarPlaneDistance = 10000.0f;
+		const float Camera::DefaultNearPlaneDistance = 0.01f;
+	const float Camera::DefaultFarPlaneDistance = 10000.0f;
 
-    Camera::Camera(Game& game) :
+	Camera::Camera(Game& game) :
 		GameComponent(game),
 		mNearPlaneDistance(DefaultNearPlaneDistance), mFarPlaneDistance(DefaultFarPlaneDistance),
-        mPosition(), mDirection(), mUp(), mRight(), mViewMatrix(), mProjectionMatrix()
-    {
-    }
+		mPosition(), mDirection(), mUp(), mRight(), mViewMatrix(), mProjectionMatrix()
+	{
+	}
 
 	Camera::Camera(Game& game, float nearPlaneDistance, float farPlaneDistance) :
 		GameComponent(game),
@@ -22,146 +22,146 @@ namespace Library
 		mPosition(), mDirection(), mUp(), mRight(), mViewMatrix(), mProjectionMatrix()
 	{
 	}
-    
-    const XMFLOAT3& Camera::Position() const
-    {
-        return mPosition;
-    }
 
-    const XMFLOAT3& Camera::Direction() const
-    {
-        return mDirection;
-    }
-    
-    const XMFLOAT3& Camera::Up() const
-    {
-        return mUp;
-    }
+	const XMFLOAT3& Camera::Position() const
+	{
+		return mPosition;
+	}
 
-    const XMFLOAT3& Camera::Right() const
-    {
-        return mRight;
-    }
+	const XMFLOAT3& Camera::Direction() const
+	{
+		return mDirection;
+	}
 
-    XMVECTOR Camera::PositionVector() const
-    {
-        return XMLoadFloat3(&mPosition);
-    }
+	const XMFLOAT3& Camera::Up() const
+	{
+		return mUp;
+	}
 
-    XMVECTOR Camera::DirectionVector() const
-    {
-        return XMLoadFloat3(&mDirection);
-    }
+	const XMFLOAT3& Camera::Right() const
+	{
+		return mRight;
+	}
 
-    XMVECTOR Camera::UpVector() const
-    {
-        return XMLoadFloat3(&mUp);
-    }
-    
-    XMVECTOR Camera::RightVector() const
-    {
-        return XMLoadFloat3(&mRight);
-    }
+	XMVECTOR Camera::PositionVector() const
+	{
+		return XMLoadFloat3(&mPosition);
+	}
 
-    float Camera::NearPlaneDistance() const
-    {
-        return mNearPlaneDistance;
-    }
+	XMVECTOR Camera::DirectionVector() const
+	{
+		return XMLoadFloat3(&mDirection);
+	}
 
-    float Camera::FarPlaneDistance() const
-    {
-        return mFarPlaneDistance;
-    }
+	XMVECTOR Camera::UpVector() const
+	{
+		return XMLoadFloat3(&mUp);
+	}
 
-    XMMATRIX Camera::ViewMatrix() const
-    {
-        return XMLoadFloat4x4(&mViewMatrix);
-    }
+	XMVECTOR Camera::RightVector() const
+	{
+		return XMLoadFloat3(&mRight);
+	}
 
-    XMMATRIX Camera::ProjectionMatrix() const
-    {
-        return XMLoadFloat4x4(&mProjectionMatrix);
-    }
+	float Camera::NearPlaneDistance() const
+	{
+		return mNearPlaneDistance;
+	}
 
-    XMMATRIX Camera::ViewProjectionMatrix() const
-    {
-        XMMATRIX viewMatrix = XMLoadFloat4x4(&mViewMatrix);
-        XMMATRIX projectionMatrix = XMLoadFloat4x4(&mProjectionMatrix);
+	float Camera::FarPlaneDistance() const
+	{
+		return mFarPlaneDistance;
+	}
 
-        return XMMatrixMultiply(viewMatrix, projectionMatrix);
-    }
+	XMMATRIX Camera::ViewMatrix() const
+	{
+		return XMLoadFloat4x4(&mViewMatrix);
+	}
 
-    void Camera::SetPosition(FLOAT x, FLOAT y, FLOAT z)
-    {
-        XMVECTOR position = XMVectorSet(x, y, z, 1.0f);
-        SetPosition(position);
-    }
+	XMMATRIX Camera::ProjectionMatrix() const
+	{
+		return XMLoadFloat4x4(&mProjectionMatrix);
+	}
 
-    void Camera::SetPosition(FXMVECTOR position)
-    {
-        XMStoreFloat3(&mPosition, position);
-    }
+	XMMATRIX Camera::ViewProjectionMatrix() const
+	{
+		XMMATRIX viewMatrix = XMLoadFloat4x4(&mViewMatrix);
+		XMMATRIX projectionMatrix = XMLoadFloat4x4(&mProjectionMatrix);
 
-    void Camera::SetPosition(const XMFLOAT3& position)
-    {
-        mPosition = position;
-    }
+		return XMMatrixMultiply(viewMatrix, projectionMatrix);
+	}
 
-    void Camera::Reset()
-    {
-        mPosition = Vector3Helper::Zero;
-        mDirection = Vector3Helper::Forward;
-        mUp = Vector3Helper::Up;
-        mRight = Vector3Helper::Right;
-        
-        UpdateViewMatrix();
-    }
+	void Camera::SetPosition(FLOAT x, FLOAT y, FLOAT z)
+	{
+		XMVECTOR position = XMVectorSet(x, y, z, 1.0f);
+		SetPosition(position);
+	}
+
+	void Camera::SetPosition(FXMVECTOR position)
+	{
+		XMStoreFloat3(&mPosition, position);
+	}
+
+	void Camera::SetPosition(const XMFLOAT3& position)
+	{
+		mPosition = position;
+	}
+
+	void Camera::Reset()
+	{
+		mPosition = Vector3Helper::Zero;
+		mDirection = Vector3Helper::Forward;
+		mUp = Vector3Helper::Up;
+		mRight = Vector3Helper::Right;
+
+		UpdateViewMatrix();
+	}
 
 	void Camera::Initialize()
-    {
+	{
 		UpdateProjectionMatrix();
-        Reset();
-    }
+		Reset();
+	}
 
-    void Camera::Update(const GameTime& gameTime)
-    {
+	void Camera::Update(const GameTime& gameTime)
+	{
 		UNREFERENCED_PARAMETER(gameTime);
 
-        UpdateViewMatrix();
-    }
+		UpdateViewMatrix();
+	}
 
-    void Camera::UpdateViewMatrix()
-    {
-        XMVECTOR eyePosition = XMLoadFloat3(&mPosition);
-        XMVECTOR direction = XMLoadFloat3(&mDirection);
-        XMVECTOR upDirection = XMLoadFloat3(&mUp);
+	void Camera::UpdateViewMatrix()
+	{
+		XMVECTOR eyePosition = XMLoadFloat3(&mPosition);
+		XMVECTOR direction = XMLoadFloat3(&mDirection);
+		XMVECTOR upDirection = XMLoadFloat3(&mUp);
 
-        XMMATRIX viewMatrix = XMMatrixLookToRH(eyePosition, direction, upDirection);
-        XMStoreFloat4x4(&mViewMatrix, viewMatrix);
-    }
+		XMMATRIX viewMatrix = XMMatrixLookToRH(eyePosition, direction, upDirection);
+		XMStoreFloat4x4(&mViewMatrix, viewMatrix);
+	}
 
-    void Camera::ApplyRotation(CXMMATRIX transform)
-    {
-        XMVECTOR direction = XMLoadFloat3(&mDirection);
-        XMVECTOR up = XMLoadFloat3(&mUp);
-        
-        direction = XMVector3TransformNormal(direction, transform);
-        direction = XMVector3Normalize(direction);
+	void Camera::ApplyRotation(CXMMATRIX transform)
+	{
+		XMVECTOR direction = XMLoadFloat3(&mDirection);
+		XMVECTOR up = XMLoadFloat3(&mUp);
 
-        up = XMVector3TransformNormal(up, transform);
-        up = XMVector3Normalize(up);
+		direction = XMVector3TransformNormal(direction, transform);
+		direction = XMVector3Normalize(direction);
 
-        XMVECTOR right = XMVector3Cross(direction, up);
-        up = XMVector3Cross(right, direction);
+		up = XMVector3TransformNormal(up, transform);
+		up = XMVector3Normalize(up);
 
-        XMStoreFloat3(&mDirection, direction);
-        XMStoreFloat3(&mUp, up);
-        XMStoreFloat3(&mRight, right);
-    }
+		XMVECTOR right = XMVector3Cross(direction, up);
+		up = XMVector3Cross(right, direction);
 
-    void Camera::ApplyRotation(const XMFLOAT4X4& transform)
-    {
-        XMMATRIX transformMatrix = XMLoadFloat4x4(&transform);
-        ApplyRotation(transformMatrix);
-    }
+		XMStoreFloat3(&mDirection, direction);
+		XMStoreFloat3(&mUp, up);
+		XMStoreFloat3(&mRight, right);
+	}
+
+	void Camera::ApplyRotation(const XMFLOAT4X4& transform)
+	{
+		XMMATRIX transformMatrix = XMLoadFloat4x4(&transform);
+		ApplyRotation(transformMatrix);
+	}
 }

@@ -3,9 +3,9 @@ cbuffer CBufferPerFrame
 {
 	float4 AmbientColor;
 	float3 LightColor;	
-    float3 LightLookAt;
-    float SpotLightInnerAngle;
-    float SpotLightOuterAngle;
+	float3 LightLookAt;
+	float SpotLightInnerAngle;
+	float SpotLightOuterAngle;
 };
 
 cbuffer CbufferPerObject
@@ -17,7 +17,7 @@ cbuffer CbufferPerObject
 
 SamplerState ColorSampler;
 Texture2D ColorTexture;
-Texture2D SpecularMap;
+
 
 struct VS_OUTPUT
 {
@@ -31,23 +31,24 @@ struct VS_OUTPUT
 
 float4 main(VS_OUTPUT IN) : SV_TARGET
 {
-	float n_dot_l = dot(In.Normal, IN.LightDirection);
+	float n_dot_l = dot(IN.Normal, IN.LightDirection);
 	float3 halfVector = normalize(IN.LightDirection + IN.ViewDirection);
 	float n_dot_h = dot(IN.Normal, halfVector);
 
 	float4 lightCoefficients = lit(n_dot_l, n_dot_h, SpecularPower);
-	float specularClamp = SpecularMap.Sample(TextureSampler, In.TextureCoordinates).x;
-	float4 color = (ColorTexture.Sample(ColorSampler, IN.TextureCoordinates));
+	float specularClamp = ColorTexture.Sample(ColorSampler, IN.TextureCoordinates).w;
+	float3 color = (ColorTexture.Sample(ColorSampler, IN.TextureCoordinates).xyz);
 
 	float3 ambient = color.rgb * AmbientColor.rbg * AmbientColor.a;
-	float3 diffuse = color.rgb * saturate(n_dot_l) * LightColor * IN.Attenuation;
-	float3 specular = min(lightCoefficient.z, specularClamp) * SpecularColor * IN.Attenuation;
+	float3 diffuse = color.rgb * saturate(n_dot_l) * LightColor;
+	float3 specular = min(lightCoefficients.z, specularClamp) * SpecularColor;
 	
 
-    float lightAngle = dot(LightLookAt, IN.LightDirection);
-    float lightAngleCoefficient = smoothstep(SpotLightAngleOuterAngle, SpotlightInnerAngle, lightAngle);
-    float spotFactor = (lightAngle > 0.0f ? lightAngleCoefficient : 0.0);
+	float lightAngle = dot(LightLookAt, IN.LightDirection);
+	float lightAngleCoefficient = smoothstep(SpotLightOuterAngle, SpotLightInnerAngle, lightAngle);
+    float spotFactor = saturate(lightAngleCoefficient);
+    //float spotFactor = (lightAngle > 0.0f ? lightAngleCoefficient : 0.0);
 
-	return float4(saturate(ambient + spotFactor * (diffuse + specular)), color.a);
+	return float4(saturate(ambient + spotFactor * IN.Attenuation * (diffuse + specular)), 1.0f);
 
 }

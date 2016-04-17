@@ -7,56 +7,56 @@ namespace Library
 {
 	RTTI_DEFINITIONS(ProxyModel)
 
-	ProxyModel::ProxyModel(Game& game, const shared_ptr<Camera>& camera, const std::string& modelFileName, float scale)
+		ProxyModel::ProxyModel(Game& game, const shared_ptr<Camera>& camera, const std::string& modelFileName, float scale)
 		: DrawableGameComponent(game, camera),
-		  mModelFileName(modelFileName), mVertexShader(nullptr), mPixelShader(nullptr), mInputLayout(nullptr),
-		  mVertexBuffer(nullptr), mIndexBuffer(nullptr), mIndexCount(0),
-		  mVertexCBufferPerObject(nullptr), mVertexCBufferPerObjectData(),		  
-		  mWorldMatrix(MatrixHelper::Identity), mScaleMatrix(MatrixHelper::Identity), mDisplayWireframe(true),
-		  mPosition(Vector3Helper::Zero), mDirection(Vector3Helper::Forward), mUp(Vector3Helper::Up), mRight(Vector3Helper::Right)
+		mModelFileName(modelFileName), mVertexShader(nullptr), mPixelShader(nullptr), mInputLayout(nullptr),
+		mVertexBuffer(nullptr), mIndexBuffer(nullptr), mIndexCount(0),
+		mVertexCBufferPerObject(nullptr), mVertexCBufferPerObjectData(),
+		mWorldMatrix(MatrixHelper::Identity), mScaleMatrix(MatrixHelper::Identity), mDisplayWireframe(true),
+		mPosition(Vector3Helper::Zero), mDirection(Vector3Helper::Forward), mUp(Vector3Helper::Up), mRight(Vector3Helper::Right)
 	{
 		XMStoreFloat4x4(&mScaleMatrix, XMMatrixScaling(scale, scale, scale));
 	}
 
 	const XMFLOAT3& ProxyModel::Position() const
-    {
-        return mPosition;
-    }
+	{
+		return mPosition;
+	}
 
-    const XMFLOAT3& ProxyModel::Direction() const
-    {
-        return mDirection;
-    }
-    
-    const XMFLOAT3& ProxyModel::Up() const
-    {
-        return mUp;
-    }
+	const XMFLOAT3& ProxyModel::Direction() const
+	{
+		return mDirection;
+	}
 
-    const XMFLOAT3& ProxyModel::Right() const
-    {
-        return mRight;
-    }
+	const XMFLOAT3& ProxyModel::Up() const
+	{
+		return mUp;
+	}
 
-    XMVECTOR ProxyModel::PositionVector() const
-    {
-        return XMLoadFloat3(&mPosition);
-    }
+	const XMFLOAT3& ProxyModel::Right() const
+	{
+		return mRight;
+	}
 
-    XMVECTOR ProxyModel::DirectionVector() const
-    {
-        return XMLoadFloat3(&mDirection);
-    }
+	XMVECTOR ProxyModel::PositionVector() const
+	{
+		return XMLoadFloat3(&mPosition);
+	}
 
-    XMVECTOR ProxyModel::UpVector() const
-    {
-        return XMLoadFloat3(&mUp);
-    }
-    
-    XMVECTOR ProxyModel::RightVector() const
-    {
-        return XMLoadFloat3(&mRight);
-    }
+	XMVECTOR ProxyModel::DirectionVector() const
+	{
+		return XMLoadFloat3(&mDirection);
+	}
+
+	XMVECTOR ProxyModel::UpVector() const
+	{
+		return XMLoadFloat3(&mUp);
+	}
+
+	XMVECTOR ProxyModel::RightVector() const
+	{
+		return XMLoadFloat3(&mRight);
+	}
 
 	bool& ProxyModel::DisplayWireframe()
 	{
@@ -64,45 +64,45 @@ namespace Library
 	}
 
 	void ProxyModel::SetPosition(FLOAT x, FLOAT y, FLOAT z)
-    {
-        XMVECTOR position = XMVectorSet(x, y, z, 1.0f);
-        SetPosition(position);
-    }
+	{
+		XMVECTOR position = XMVectorSet(x, y, z, 1.0f);
+		SetPosition(position);
+	}
 
-    void ProxyModel::SetPosition(FXMVECTOR position)
-    {
-        XMStoreFloat3(&mPosition, position);
-    }
+	void ProxyModel::SetPosition(FXMVECTOR position)
+	{
+		XMStoreFloat3(&mPosition, position);
+	}
 
-    void ProxyModel::SetPosition(const XMFLOAT3& position)
-    {
-        mPosition = position;
-    }
+	void ProxyModel::SetPosition(const XMFLOAT3& position)
+	{
+		mPosition = position;
+	}
 
 	void ProxyModel::ApplyRotation(CXMMATRIX transform)
-    {
-        XMVECTOR direction = XMLoadFloat3(&mDirection);
-        XMVECTOR up = XMLoadFloat3(&mUp);
-        
-        direction = XMVector3TransformNormal(direction, transform);
-        direction = XMVector3Normalize(direction);
+	{
+		XMVECTOR direction = XMLoadFloat3(&mDirection);
+		XMVECTOR up = XMLoadFloat3(&mUp);
 
-        up = XMVector3TransformNormal(up, transform);
-        up = XMVector3Normalize(up);
+		direction = XMVector3TransformNormal(direction, transform);
+		direction = XMVector3Normalize(direction);
 
-        XMVECTOR right = XMVector3Cross(direction, up);
-        up = XMVector3Cross(right, direction);
+		up = XMVector3TransformNormal(up, transform);
+		up = XMVector3Normalize(up);
 
-        XMStoreFloat3(&mDirection, direction);
-        XMStoreFloat3(&mUp, up);
-        XMStoreFloat3(&mRight, right);
-    }
+		XMVECTOR right = XMVector3Cross(direction, up);
+		up = XMVector3Cross(right, direction);
 
-    void ProxyModel::ApplyRotation(const XMFLOAT4X4& transform)
-    {
-        XMMATRIX transformMatrix = XMLoadFloat4x4(&transform);
-        ApplyRotation(transformMatrix);
-    }
+		XMStoreFloat3(&mDirection, direction);
+		XMStoreFloat3(&mUp, up);
+		XMStoreFloat3(&mRight, right);
+	}
+
+	void ProxyModel::ApplyRotation(const XMFLOAT4X4& transform)
+	{
+		XMMATRIX transformMatrix = XMLoadFloat4x4(&transform);
+		ApplyRotation(transformMatrix);
+	}
 
 	void ProxyModel::Initialize()
 	{
@@ -158,7 +158,7 @@ namespace Library
 	{
 		UNREFERENCED_PARAMETER(gameTime);
 
-		ID3D11DeviceContext* direct3DDeviceContext = mGame->Direct3DDeviceContext();			
+		ID3D11DeviceContext* direct3DDeviceContext = mGame->Direct3DDeviceContext();
 		direct3DDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		direct3DDeviceContext->IASetInputLayout(mInputLayout.Get());
 

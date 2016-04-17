@@ -55,7 +55,7 @@ namespace Library
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mVertexBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mVertexCBufferPerObject;
 		VertexCBufferPerObject mVertexCBufferPerObjectData;
-	
+
 		DirectX::XMFLOAT3 mPosition;
 		UINT mSize;
 		UINT mScale;

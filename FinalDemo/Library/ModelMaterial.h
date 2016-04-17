@@ -10,19 +10,19 @@ namespace Library
 	class OutputStreamHelper;
 	class InputStreamHelper;
 
-    enum class TextureType
-    {
-        Diffuse = 0,
-        SpecularMap,
-        Ambient,
-        Emissive,
-        Heightmap,
-        NormalMap,
-        SpecularPowerMap,
-        DisplacementMap,
-        LightMap,
-        End
-    };
+	enum class TextureType
+	{
+		Diffuse = 0,
+		SpecularMap,
+		Ambient,
+		Emissive,
+		Heightmap,
+		NormalMap,
+		SpecularPowerMap,
+		DisplacementMap,
+		LightMap,
+		End
+	};
 
 	struct ModelMaterialData
 	{
@@ -40,24 +40,24 @@ namespace Library
 		void Clear();
 	};
 
-    class ModelMaterial
-    {
-    public:
+	class ModelMaterial
+	{
+	public:
 		ModelMaterial(Model& model, InputStreamHelper& streamHelper);
 		ModelMaterial(Model& model, ModelMaterialData&& modelMaterialData);
 		ModelMaterial(ModelMaterial&& rhs);
 		ModelMaterial& operator=(ModelMaterial&& rhs);
 
-        Model& GetModel();
-        const std::string& Name() const;
-        const std::map<TextureType, std::vector<std::string>*>& Textures() const;
+		Model& GetModel();
+		const std::string& Name() const;
+		const std::map<TextureType, std::vector<std::string>*>& Textures() const;
 
 		void Save(OutputStreamHelper& streamHelper) const;
 
-    private:
+	private:
 		void Load(InputStreamHelper& streamHelper);
 
-        Model* mModel;
+		Model* mModel;
 		ModelMaterialData mData;
-    };
+	};
 }

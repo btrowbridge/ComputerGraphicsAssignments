@@ -28,4 +28,3 @@ namespace Library
 		float mRadius;
 	};
 }
-

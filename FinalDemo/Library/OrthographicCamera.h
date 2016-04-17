@@ -4,14 +4,14 @@
 
 namespace Library
 {
-    class GameTime;
+	class GameTime;
 
-    class OrthographicCamera : public Camera
-    {
-        RTTI_DECLARATIONS(OrthographicCamera, Camera)
+	class OrthographicCamera : public Camera
+	{
+		RTTI_DECLARATIONS(OrthographicCamera, Camera)
 
-    public:
-        OrthographicCamera(Game& game);
+	public:
+		OrthographicCamera(Game& game);
 		OrthographicCamera(Game& game, float viewWidth, float viewHeight, float nearPlaneDistance, float farPlaneDistance);
 		virtual ~OrthographicCamera() = default;
 
@@ -24,13 +24,13 @@ namespace Library
 		float ViewHeight() const;
 		void SetViewHeight(float viewHeight);
 
-        virtual void UpdateProjectionMatrix() override;
+		virtual void UpdateProjectionMatrix() override;
 
 		static const float DefaultViewWidth;
 		static const float DefaultViewHeight;
 
-    protected:
+	protected:
 		float mViewWidth;
 		float mViewHeight;
-    };
+	};
 }

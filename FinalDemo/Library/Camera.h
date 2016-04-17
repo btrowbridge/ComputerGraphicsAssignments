@@ -5,63 +5,62 @@
 
 namespace Library
 {
-    class GameTime;
+	class GameTime;
 
-    class Camera : public GameComponent
-    {
-        RTTI_DECLARATIONS(Camera, GameComponent)
+	class Camera : public GameComponent
+	{
+		RTTI_DECLARATIONS(Camera, GameComponent)
 
-    public:
-        Camera(Game& game);
+	public:
+		Camera(Game& game);
 		Camera(Game& game, float nearPlaneDistance, float farPlaneDistance);
 		virtual ~Camera() = default;
 
 		Camera(const Camera& rhs) = delete;
 		Camera& operator=(const Camera& rhs) = delete;
 
-        const DirectX::XMFLOAT3& Position() const;
-        const DirectX::XMFLOAT3& Direction() const;
-        const DirectX::XMFLOAT3& Up() const;
-        const DirectX::XMFLOAT3& Right() const;
-        
-        DirectX::XMVECTOR PositionVector() const;
-        DirectX::XMVECTOR DirectionVector() const;
-        DirectX::XMVECTOR UpVector() const;
-        DirectX::XMVECTOR RightVector() const;
-        
-        float NearPlaneDistance() const;
-        float FarPlaneDistance() const;
+		const DirectX::XMFLOAT3& Position() const;
+		const DirectX::XMFLOAT3& Direction() const;
+		const DirectX::XMFLOAT3& Up() const;
+		const DirectX::XMFLOAT3& Right() const;
 
-        DirectX::XMMATRIX ViewMatrix() const;
-        DirectX::XMMATRIX ProjectionMatrix() const;
-        DirectX::XMMATRIX ViewProjectionMatrix() const;
+		DirectX::XMVECTOR PositionVector() const;
+		DirectX::XMVECTOR DirectionVector() const;
+		DirectX::XMVECTOR UpVector() const;
+		DirectX::XMVECTOR RightVector() const;
 
-        virtual void SetPosition(FLOAT x, FLOAT y, FLOAT z);
-        virtual void SetPosition(DirectX::FXMVECTOR position);
-        virtual void SetPosition(const DirectX::XMFLOAT3& position);
+		float NearPlaneDistance() const;
+		float FarPlaneDistance() const;
 
-        virtual void Reset();
-        virtual void Initialize() override;
+		DirectX::XMMATRIX ViewMatrix() const;
+		DirectX::XMMATRIX ProjectionMatrix() const;
+		DirectX::XMMATRIX ViewProjectionMatrix() const;
+
+		virtual void SetPosition(FLOAT x, FLOAT y, FLOAT z);
+		virtual void SetPosition(DirectX::FXMVECTOR position);
+		virtual void SetPosition(const DirectX::XMFLOAT3& position);
+
+		virtual void Reset();
+		virtual void Initialize() override;
 		virtual void Update(const GameTime& gameTime) override;
-        virtual void UpdateViewMatrix();
-        virtual void UpdateProjectionMatrix() = 0;
-        virtual void ApplyRotation(DirectX::CXMMATRIX transform);
-        virtual void ApplyRotation(const DirectX::XMFLOAT4X4& transform);
+		virtual void UpdateViewMatrix();
+		virtual void UpdateProjectionMatrix() = 0;
+		virtual void ApplyRotation(DirectX::CXMMATRIX transform);
+		virtual void ApplyRotation(const DirectX::XMFLOAT4X4& transform);
 
-        static const float DefaultNearPlaneDistance;
-        static const float DefaultFarPlaneDistance;
+		static const float DefaultNearPlaneDistance;
+		static const float DefaultFarPlaneDistance;
 
-    protected:
-        float mNearPlaneDistance;
-        float mFarPlaneDistance;
+	protected:
+		float mNearPlaneDistance;
+		float mFarPlaneDistance;
 
-        DirectX::XMFLOAT3 mPosition;
-        DirectX::XMFLOAT3 mDirection;
-        DirectX::XMFLOAT3 mUp;
-        DirectX::XMFLOAT3 mRight;
+		DirectX::XMFLOAT3 mPosition;
+		DirectX::XMFLOAT3 mDirection;
+		DirectX::XMFLOAT3 mUp;
+		DirectX::XMFLOAT3 mRight;
 
-        DirectX::XMFLOAT4X4 mViewMatrix;
-        DirectX::XMFLOAT4X4 mProjectionMatrix;        
-    };
+		DirectX::XMFLOAT4X4 mViewMatrix;
+		DirectX::XMFLOAT4X4 mProjectionMatrix;
+	};
 }
-

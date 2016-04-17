@@ -38,7 +38,7 @@ namespace Library
 		void ApplyRotation(const DirectX::XMFLOAT4X4& transform);
 
 		virtual void Initialize() override;
-		virtual void Update(const GameTime& gameTime) override;		
+		virtual void Update(const GameTime& gameTime) override;
 		virtual void Draw(const GameTime& gameTime) override;
 
 	private:
@@ -62,7 +62,7 @@ namespace Library
 		UINT mIndexCount;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mVertexCBufferPerObject;
 		VertexCBufferPerObject mVertexCBufferPerObjectData;
-        
+
 		DirectX::XMFLOAT4X4 mWorldMatrix;
 		DirectX::XMFLOAT4X4 mScaleMatrix;
 

@@ -4,22 +4,22 @@ using namespace DirectX;
 
 namespace Library
 {
-    RTTI_DEFINITIONS(FirstPersonCamera)
+	RTTI_DEFINITIONS(FirstPersonCamera)
 
-    const float FirstPersonCamera::DefaultRotationRate = XMConvertToRadians(100.0f);
-    const float FirstPersonCamera::DefaultMovementRate = 100.0f;
+		const float FirstPersonCamera::DefaultRotationRate = XMConvertToRadians(100.0f);
+	const float FirstPersonCamera::DefaultMovementRate = 100.0f;
 
-    FirstPersonCamera::FirstPersonCamera(Game& game) :
+	FirstPersonCamera::FirstPersonCamera(Game& game) :
 		PerspectiveCamera(game),
 		mGamePad(nullptr), mRotationRate(DefaultRotationRate), mMovementRate(DefaultMovementRate)
-    {
-    }
+	{
+	}
 
-    FirstPersonCamera::FirstPersonCamera(Game& game, float fieldOfView, float aspectRatio, float nearPlaneDistance, float farPlaneDistance) :
+	FirstPersonCamera::FirstPersonCamera(Game& game, float fieldOfView, float aspectRatio, float nearPlaneDistance, float farPlaneDistance) :
 		PerspectiveCamera(game, fieldOfView, aspectRatio, nearPlaneDistance, farPlaneDistance),
 		mGamePad(nullptr), mRotationRate(DefaultRotationRate), mMovementRate(DefaultMovementRate)
-    {
-    }
+	{
+	}
 
 	GamePadComponent* FirstPersonCamera::GetGamePad() const
 	{
@@ -31,15 +31,15 @@ namespace Library
 		mGamePad = gamePad;
 	}
 
-    float& FirstPersonCamera::RotationRate()
-    {
-        return mRotationRate;
-    }
+	float& FirstPersonCamera::RotationRate()
+	{
+		return mRotationRate;
+	}
 
-    float& FirstPersonCamera::MovementRate()
-    {
-        return mMovementRate;
-    }
+	float& FirstPersonCamera::MovementRate()
+	{
+		return mMovementRate;
+	}
 
 	void FirstPersonCamera::Initialize()
 	{
@@ -48,8 +48,8 @@ namespace Library
 		Camera::Initialize();
 	}
 
-    void FirstPersonCamera::Update(const GameTime& gameTime)
-    {
+	void FirstPersonCamera::Update(const GameTime& gameTime)
+	{
 		if (mGamePad != nullptr)
 		{
 			auto& gamePadState = mGamePad->CurrentState();
@@ -86,6 +86,6 @@ namespace Library
 			}
 		}
 
-        Camera::Update(gameTime);
-    }
+		Camera::Update(gameTime);
+	}
 }

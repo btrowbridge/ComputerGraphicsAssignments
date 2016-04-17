@@ -38,7 +38,7 @@ VS_OUTPUT main(VS_INPUT IN)
 	OUT.TextureCoordinates = IN.TextureCoordinates;
 	OUT.Normal = mul(float4(IN.Normal, 0), World);
 	
-	float3 worldPosition = mul(IN.ObjectPosition, World);
+	float3 worldPosition = mul(IN.ObjectPosition, World).xyz;
 	OUT.ViewDirection = normalize(CameraPosition - worldPosition);
 	float3 lightDirection = LightPosition - worldPosition;
 	OUT.LightDirection = normalize(lightDirection);

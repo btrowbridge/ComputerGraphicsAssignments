@@ -15,7 +15,7 @@ namespace Library
 
 		Vector2Helper() = delete;
 		Vector2Helper(const Vector2Helper& rhs) = delete;
-		Vector2Helper& operator=(const Vector2Helper& rhs) = delete;		
+		Vector2Helper& operator=(const Vector2Helper& rhs) = delete;
 	};
 
 	class Vector3Helper
@@ -34,7 +34,7 @@ namespace Library
 
 		Vector3Helper() = delete;
 		Vector3Helper(const Vector3Helper& rhs) = delete;
-		Vector3Helper& operator=(const Vector3Helper& rhs) = delete;		
+		Vector3Helper& operator=(const Vector3Helper& rhs) = delete;
 	};
 
 	class Vector4Helper
@@ -47,6 +47,6 @@ namespace Library
 
 		Vector4Helper() = delete;
 		Vector4Helper(const Vector3Helper& rhs) = delete;
-		Vector4Helper& operator=(const Vector3Helper& rhs) = delete;		
+		Vector4Helper& operator=(const Vector3Helper& rhs) = delete;
 	};
 }

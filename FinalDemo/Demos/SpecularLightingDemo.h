@@ -11,10 +11,10 @@ namespace Library
 {
 	class Camera;
 	class Mesh;
-	class DirectionalLight;
+	class SpecularLight;
 	class ProxyModel;
 	class KeyboardComponent;
-	class GamePadComponent;	
+	class GamePadComponent;
 }
 
 namespace Rendering
@@ -40,22 +40,39 @@ namespace Rendering
 			DirectX::XMFLOAT4X4 WorldViewProjection;
 			DirectX::XMFLOAT4X4 World;
 
-			VertexCBufferPerObject() { }
+			VertexCBufferPerObject() : WorldViewProjection(), World() { }
 			VertexCBufferPerObject(const DirectX::XMFLOAT4X4& wvp, const DirectX::XMFLOAT4X4& world) :
 				WorldViewProjection(wvp), World(world) { }
+		};
+		struct VertexCBufferPerFrame
+		{
+			DirectX::XMFLOAT3 CameraPosition;
+			float Padding;
+
+			VertexCBufferPerFrame() : CameraPosition(), Padding() {}
+			VertexCBufferPerFrame(const DirectX::XMFLOAT3 cd) : CameraPosition(cd), Padding() {}
 		};
 
 		struct PixelCBufferPerFrame
 		{
 			DirectX::XMFLOAT4 AmbientColor;
 			DirectX::XMFLOAT3 LightDirection;
-			float Padding2;
+			float Padding;
 			DirectX::XMFLOAT4 LightColor;
 
 			PixelCBufferPerFrame() :
 				AmbientColor(DirectX::Colors::Black), LightDirection(0.0f, 0.0f, 1.0f), LightColor(DirectX::Colors::White) { }
 			PixelCBufferPerFrame(const DirectX::XMFLOAT4& ambientColor, const DirectX::XMFLOAT3& lightDirection, const DirectX::XMFLOAT4& lightColor) :
 				AmbientColor(ambientColor), LightDirection(lightDirection), LightColor(lightColor) { }
+		};
+
+		struct PixelCBufferPerObject
+		{
+			DirectX::XMFLOAT3 SpecularColor;
+			float SpecularPower;
+
+			PixelCBufferPerObject() : SpecularColor(DirectX::Colors::White), SpecularPower(1.0f) {}
+			PixelCBufferPerObject(const DirectX::XMFLOAT3 sc, const float sp) : SpecularColor(sc), SpecularPower(sp) {}
 		};
 
 		void CreateVertexBuffer(const Library::Mesh& mesh, ID3D11Buffer** vertexBuffer) const;
@@ -74,7 +91,9 @@ namespace Rendering
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mIndexBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mVSConstantBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mPSConstantBuffer;
+
 		DirectX::XMFLOAT4X4 mWorldMatrix;
+
 		VertexCBufferPerObject mVSCBufferPerObject;
 		PixelCBufferPerFrame mPSCBufferPerFrame;
 		std::uint32_t mIndexCount;

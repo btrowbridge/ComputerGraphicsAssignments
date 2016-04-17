@@ -7,7 +7,7 @@ namespace Library
 {
 	RTTI_DEFINITIONS(GamePadComponent)
 
-	unique_ptr<GamePad> GamePadComponent::sGamePad(new DirectX::GamePad);
+		unique_ptr<GamePad> GamePadComponent::sGamePad(new DirectX::GamePad);
 
 	GamePad* GamePadComponent::GamePad()
 	{
@@ -87,50 +87,50 @@ namespace Library
 	{
 		switch (button)
 		{
-			case GamePadButtons::A:
-				return state.buttons.a;
+		case GamePadButtons::A:
+			return state.buttons.a;
 
-			case GamePadButtons::B:
-				return state.buttons.b;
+		case GamePadButtons::B:
+			return state.buttons.b;
 
-			case GamePadButtons::X:
-				return state.buttons.x;
+		case GamePadButtons::X:
+			return state.buttons.x;
 
-			case GamePadButtons::Y:
-				return state.buttons.y;
+		case GamePadButtons::Y:
+			return state.buttons.y;
 
-			case GamePadButtons::LeftStick:
-				return state.buttons.leftStick;
+		case GamePadButtons::LeftStick:
+			return state.buttons.leftStick;
 
-			case GamePadButtons::RightStick:
-				return state.buttons.rightStick;
+		case GamePadButtons::RightStick:
+			return state.buttons.rightStick;
 
-			case GamePadButtons::LeftShoulder:
-				return state.buttons.leftShoulder;
+		case GamePadButtons::LeftShoulder:
+			return state.buttons.leftShoulder;
 
-			case GamePadButtons::RightShoulder:
-				return state.buttons.rightShoulder;
+		case GamePadButtons::RightShoulder:
+			return state.buttons.rightShoulder;
 
-			case GamePadButtons::Back:
-				return state.buttons.back;
+		case GamePadButtons::Back:
+			return state.buttons.back;
 
-			case GamePadButtons::Start:
-				return state.buttons.start;
+		case GamePadButtons::Start:
+			return state.buttons.start;
 
-			case GamePadButtons::DPadUp:
-				return state.dpad.up;
+		case GamePadButtons::DPadUp:
+			return state.dpad.up;
 
-			case GamePadButtons::DPadDown:
-				return state.dpad.down;
+		case GamePadButtons::DPadDown:
+			return state.dpad.down;
 
-			case GamePadButtons::DPadLeft:
-				return state.dpad.left;
+		case GamePadButtons::DPadLeft:
+			return state.dpad.left;
 
-			case GamePadButtons::DPadRight:
-				return state.dpad.right;
+		case GamePadButtons::DPadRight:
+			return state.dpad.right;
 
-			default:
-				throw exception("Invalid GamePadButtons.");
+		default:
+			throw exception("Invalid GamePadButtons.");
 		}
 	}
 }

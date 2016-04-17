@@ -51,7 +51,7 @@ ModelMaterial::ModelMaterial(Model& model, ModelMaterialData&& modelMaterialData
 
 ModelMaterial::ModelMaterial(ModelMaterial&& rhs) :
 	mModel(rhs.mModel), mData(move(rhs.mData))
-{	
+{
 }
 
 ModelMaterial& ModelMaterial::operator=(ModelMaterial&& rhs)
@@ -67,12 +67,12 @@ ModelMaterial& ModelMaterial::operator=(ModelMaterial&& rhs)
 
 Model& ModelMaterial::GetModel()
 {
-    return *mModel;
+	return *mModel;
 }
 
 const string& ModelMaterial::Name() const
 {
-    return mData.Name;
+	return mData.Name;
 }
 
 const map<TextureType, vector<string>*>& ModelMaterial::Textures() const
@@ -118,6 +118,6 @@ void ModelMaterial::Load(InputStreamHelper& streamHelper)
 			string texture;
 			streamHelper >> texture;
 			textures->push_back(texture);
-		}	
+		}
 	}
 }
