@@ -46,39 +46,53 @@ namespace Rendering
 		};
 		struct VertexCBufferPerFrame
 		{
-			DirectX::XMFLOAT3 CameraPosition;
-			float Padding;
 			DirectX::XMFLOAT3 LightPosition;
 			float LightRadius;
-			
+			DirectX::XMFLOAT3 LightLookAt;
+			float Padding;
 
-			VertexCBufferPerFrame() : CameraPosition(), LightPosition(0.0f,0.0f,0.0f), LightRadius(10.0f) { }
-			VertexCBufferPerFrame(const DirectX::XMFLOAT3 cp,
-				const DirectX::XMFLOAT3 lp,
-				float lr) :
-				CameraPosition(cp), LightPosition(lp), LightRadius(lr) { }
+			VertexCBufferPerFrame()
+				: LightPosition(0.0f, 0.0f, 0.0f), LightRadius(10.0f), LightLookAt(0.0f, 0.0f, -1.0f)
+			{
+			}
+
+			VertexCBufferPerFrame(const DirectX::XMFLOAT3& lightPosition, float lightRadius, const DirectX::XMFLOAT3& lightLookAt)
+				: LightPosition(lightPosition), LightRadius(lightRadius), LightLookAt(lightLookAt)
+			{
+			}
 		};
 
 		struct PixelCBufferPerFrame
 		{
 			DirectX::XMFLOAT4 AmbientColor;
-			DirectX::XMFLOAT3 LightColor;
-			DirectX::XMFLOAT3 LightLookAt;
+			DirectX::XMFLOAT4 LightColor;
+			DirectX::XMFLOAT3 LightPosition;
 			float SpotLightInnerAngle;
 			float SpotLightOuterAngle;
+			DirectX::XMFLOAT3 CameraPosition;
 
-			PixelCBufferPerFrame() :
-				AmbientColor(DirectX::Colors::Black), LightColor(DirectX::Colors::White), LightLookAt(0.0f,0.0f,-1.0f), SpotLightInnerAngle(0.75f), SpotLightOuterAngle(0.25f) { }
-			PixelCBufferPerFrame(const DirectX::XMFLOAT4& ambientColor, const DirectX::XMFLOAT3& lightColor, const DirectX::XMFLOAT3& lla, const float slia, const float sloa) :
-				AmbientColor(ambientColor), LightColor(lightColor), LightLookAt(lla), SpotLightInnerAngle(slia), SpotLightOuterAngle(sloa) { }
+			PixelCBufferPerFrame()
+				: AmbientColor(0.0f, 0.0f, 0.0f, 0.0f), LightColor(1.0f, 1.0f, 1.0f, 1.0f), LightPosition(0.0f, 0.0f, 0.0f),
+				SpotLightInnerAngle(0.75f), SpotLightOuterAngle(0.25f), CameraPosition(0.0f, 0.0f, 0.0f)
+			{
+			}
+
+			PixelCBufferPerFrame(const DirectX::XMFLOAT4& ambientColor, const DirectX::XMFLOAT4& lightColor, const DirectX::XMFLOAT3& lightPosition, float spotLightInnerAngle, float spotLightOuterAngle, const DirectX::XMFLOAT3& cameraPosition)
+				: AmbientColor(ambientColor), LightColor(lightColor), LightPosition(lightPosition),
+				SpotLightInnerAngle(spotLightInnerAngle), SpotLightOuterAngle(spotLightOuterAngle), CameraPosition(cameraPosition)
+			{
+			}
 		};
 		struct PixelCBufferPerObject {
 			DirectX::XMFLOAT3 SpecularColor;
 			float SpecularPower;
 
-			PixelCBufferPerObject() : SpecularColor(DirectX::Colors::White), SpecularPower(25.0f) {};
-			PixelCBufferPerObject(DirectX::XMFLOAT3 sc,
-				float sp) : SpecularColor(sc), SpecularPower(sp) {};
+			PixelCBufferPerObject() : SpecularColor(1.0f, 1.0f, 1.0f), SpecularPower(25.0f) { }
+
+			PixelCBufferPerObject(const DirectX::XMFLOAT3& specularColor, float specularPower)
+				: SpecularColor(specularColor), SpecularPower(specularPower)
+			{
+			}
 		};
 
 		void CreateVertexBuffer(const Library::Mesh& mesh, ID3D11Buffer** vertexBuffer) const;

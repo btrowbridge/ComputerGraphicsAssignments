@@ -37,7 +37,7 @@ namespace Rendering
 	{
 		// Load a compiled vertex shader
 		vector<char> compiledVertexShader;
-		Utility::LoadBinaryFile(L"Content\\Shaders\\PointLightingDemoVS.cso", compiledVertexShader);
+		Utility::LoadBinaryFile(L"Content\\Shaders\\SpotlightLightingDemoVS.cso", compiledVertexShader);
 		ThrowIfFailed(mGame->Direct3DDevice()->CreateVertexShader(&compiledVertexShader[0], compiledVertexShader.size(), nullptr, mVertexShader.ReleaseAndGetAddressOf()), "ID3D11Device::CreatedVertexShader() failed.");
 
 		// Load a compiled pixel shader
@@ -88,25 +88,23 @@ namespace Rendering
 
 		
 		
-		// Load a proxy model for the directional light
-		mProxyModel = make_unique<ProxyModel>(*mGame, mCamera, "Content\\Models\\SpotLightProxy.obj.bin", 0.5f);
+		mProxyModel = std::make_unique<ProxyModel>(*mGame, mCamera, "Content\\Models\\darkfighter6.obj.bin", 0.05f);
 		mProxyModel->Initialize();
-		mProxyModel->SetPosition(10.0f, 0.0f, 0.0f);
-		mProxyModel->ApplyRotation(XMMatrixRotationX(XM_PIDIV2));
+		mProxyModel->ApplyRotation(XMMatrixRotationY(-XM_PIDIV2));
 
 		mSpotLight = std::make_unique<SpotLight>(*mGame);
-		mSpotLight->SetPosition(mProxyModel->Position());
-		mSpotLight->SetRadius(10.0f);
-		
-
+		mSpotLight->SetRadius(50.0f);
+		mSpotLight->SetPosition(0.0f, 0.0f, 10.0f);
 		mVSCBufferPerFrame.LightPosition = mSpotLight->Position();
 		mVSCBufferPerFrame.LightRadius = mSpotLight->Radius();
-		mPSCBufferPerFrame.LightLookAt = mSpotLight->Direction();
+		mVSCBufferPerFrame.LightLookAt = mSpotLight->Direction();
 
+		mPSCBufferPerFrame.LightPosition = mSpotLight->Position();
 		mPSCBufferPerFrame.SpotLightInnerAngle = mSpotLight->InnerAngle();
 		mPSCBufferPerFrame.SpotLightOuterAngle = mSpotLight->OuterAngle();
-		XMStoreFloat3(&mPSCBufferPerFrame.LightColor, DirectX::Colors::White);
-		mVSCBufferPerFrame.CameraPosition = mCamera->Position();
+		mPSCBufferPerFrame.LightColor = ColorHelper::ToFloat4(mSpotLight->Color(), true);
+		mPSCBufferPerFrame.CameraPosition = mCamera->Position();
+
 
 		// Locate possible input devices
 		mKeyboard = static_cast<KeyboardComponent*>(mGame->Services().GetService(KeyboardComponent::TypeIdClass()));
@@ -171,11 +169,10 @@ namespace Rendering
 
 		XMMATRIX worldMatrix = XMLoadFloat4x4(&mWorldMatrix);
 		XMMATRIX wvp = worldMatrix * mCamera->ViewProjectionMatrix();
-		wvp = XMMatrixTranspose(wvp);
-		XMStoreFloat4x4(&mVSCBufferPerObject.WorldViewProjection, wvp);
+		XMStoreFloat4x4(&mVSCBufferPerObject.WorldViewProjection, XMMatrixTranspose(wvp));
 		XMStoreFloat4x4(&mVSCBufferPerObject.World, XMMatrixTranspose(worldMatrix));
 
-		mVSCBufferPerFrame.CameraPosition = mCamera->Position();
+		mPSCBufferPerFrame.CameraPosition = mCamera->Position();
 
 		direct3DDeviceContext->UpdateSubresource(mVSConstantBufferPO.Get(), 0, nullptr, &mVSCBufferPerObject, 0, 0);
 		direct3DDeviceContext->UpdateSubresource(mPSConstantBufferPO.Get(), 0, nullptr, &mPSCBufferPerObject, 0, 0);
@@ -260,8 +257,8 @@ namespace Rendering
 			spotLightIntensity += elapsedTime;
 			spotLightIntensity = min(spotLightIntensity, 1.0f);
 
-			mPSCBufferPerFrame.LightColor = XMFLOAT3(spotLightIntensity, spotLightIntensity, spotLightIntensity);
-			mSpotLight->SetColor(spotLightIntensity, spotLightIntensity, spotLightIntensity,0);
+			mPSCBufferPerFrame.LightColor = XMFLOAT4(spotLightIntensity, spotLightIntensity, spotLightIntensity, 1.0f);
+			mSpotLight->SetColor(mPSCBufferPerFrame.LightColor);
 
 		}
 		if (mGamePad->IsButtonDown(GamePadButtons::B) && spotLightIntensity > 0.0f)
@@ -269,8 +266,8 @@ namespace Rendering
 			spotLightIntensity -= elapsedTime;
 			spotLightIntensity = max(spotLightIntensity, 0.0f);
 
-			mPSCBufferPerFrame.LightColor = XMFLOAT3(spotLightIntensity, spotLightIntensity, spotLightIntensity);
-			mSpotLight->SetColor(spotLightIntensity, spotLightIntensity, spotLightIntensity, 0);
+			mPSCBufferPerFrame.LightColor = XMFLOAT4(spotLightIntensity, spotLightIntensity, spotLightIntensity, 1.0f);
+			mSpotLight->SetColor(mPSCBufferPerFrame.LightColor);
 		}
 
 		// Move spot light
@@ -283,6 +280,7 @@ namespace Rendering
 			mSpotLight->SetPosition(mSpotLight->PositionVector() + movement);
 			mProxyModel->SetPosition(mSpotLight->Position());
 			mVSCBufferPerFrame.LightPosition = mSpotLight->Position();
+			mPSCBufferPerFrame.LightPosition = mSpotLight->Position();
 
 
 			// Rotate spot light
@@ -293,20 +291,20 @@ namespace Rendering
 			XMMATRIX lightRotationMatrix = XMMatrixIdentity();
 			if (rotationAmount.x != 0)
 			{
-				lightRotationMatrix = XMMatrixRotationAxis(XMLoadFloat3(&Vector3Helper::Up), -rotationAmount.x);
+				lightRotationMatrix = XMMatrixRotationAxis(mProxyModel->UpVector(), -rotationAmount.x);
 			}
 
 			if (rotationAmount.y != 0)
 			{
-				XMMATRIX lightRotationAxisMatrix = XMMatrixRotationAxis(mSpotLight->RightVector(), rotationAmount.y);
+				XMMATRIX lightRotationAxisMatrix = XMMatrixRotationAxis(mProxyModel->DirectionVector(), -rotationAmount.y);
 				lightRotationMatrix *= lightRotationAxisMatrix;
 			}
 
 			if (rotationAmount.x != 0.0f || rotationAmount.y != 0.0f)
 			{
-				mProxyModel->ApplyRotation(lightRotationMatrix);
 				mSpotLight->ApplyRotation(lightRotationMatrix);
-				mPSCBufferPerFrame.LightLookAt = mSpotLight->Direction();
+				mProxyModel->ApplyRotation(lightRotationMatrix);
+				mVSCBufferPerFrame.LightLookAt = mSpotLight->Direction();
 			}
 		}
 		// Update the light's radius

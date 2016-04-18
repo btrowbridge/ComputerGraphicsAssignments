@@ -1,52 +1,55 @@
-
 cbuffer CBufferPerFrame
 {
-	float4 AmbientColor;
-	float3 LightColor;	
-	float3 LightLookAt;
-	float SpotLightInnerAngle;
-	float SpotLightOuterAngle;
-};
+    float4 AmbientColor;
+    float4 LightColor;
+    float3 LightPosition;
+    float SpotLightInnerAngle;
+    float SpotLightOuterAngle;
+    float3 CameraPosition;
+}
 
-cbuffer CbufferPerObject
+cbuffer CBufferPerObject
 {
-	float3 SpecularColor;
-	float SpecularPower;
-};
+    float3 SpecularColor;
+    float SpecularPower;
+}
 
-
-SamplerState ColorSampler;
 Texture2D ColorTexture;
-
+SamplerState ColorSampler;
 
 struct VS_OUTPUT
 {
-	float4 Position : SV_POSITION;
-	float2 TextureCoordinates : TEXCOORD;
-	float3 Normal : NORMAL;
-	float3 ViewDirection : VIEWDIR;
-	float3 LightDirection : LIGHTDIR;
-	float Attenuation : ATTENUATION;
+    float4 Position : SV_Position;
+    float3 WorldPosition : WORLDPOS;
+    float2 TextureCoordinate : TEXCOORD;
+    float3 Normal : NORMAL;
+    float Attenuation : ATTENUATION;
+    float3 LightLookAt : LOOKAT;
 };
 
 float4 main(VS_OUTPUT IN) : SV_TARGET
 {
-	float n_dot_l = dot(IN.Normal, IN.LightDirection);
-	float3 halfVector = normalize(IN.LightDirection + IN.ViewDirection);
-	float n_dot_h = dot(IN.Normal, halfVector);
+    float4 OUT = (float) 0;
 
-	float4 lightCoefficients = lit(n_dot_l, n_dot_h, SpecularPower);
-	float specularClamp = ColorTexture.Sample(ColorSampler, IN.TextureCoordinates).w;
-	float3 color = (ColorTexture.Sample(ColorSampler, IN.TextureCoordinates).xyz);
+    float3 lightDirection = normalize(LightPosition - IN.WorldPosition);
+    float3 viewDirection = normalize(CameraPosition - IN.WorldPosition);
 
-	float3 ambient = color.rgb * AmbientColor.rbg * AmbientColor.a;
-	float3 diffuse = color.rgb * saturate(n_dot_l) * LightColor;
-	float3 specular = min(lightCoefficients.z, specularClamp) * SpecularColor;
-	
+    float3 normal = normalize(IN.Normal);
+    float n_dot_l = dot(normal, lightDirection);
+    float3 halfVector = normalize(lightDirection + viewDirection);
+    float n_dot_h = dot(normal, halfVector);
+    float3 lightLookAt = normalize(IN.LightLookAt);
 
-	float lightAngle = dot(normalize(-LightLookAt), IN.LightDirection);
+    float4 color = ColorTexture.Sample(ColorSampler, IN.TextureCoordinate);
+    float4 lightCoefficients = lit(n_dot_l, n_dot_h, SpecularPower);
+
+    float3 ambient = AmbientColor.rgb * color.rgb;
+    float3 diffuse = LightColor.rgb * lightCoefficients.y * color.rgb * IN.Attenuation;
+    float3 specular = SpecularColor * min(lightCoefficients.z, color.w) * IN.Attenuation;
+		
+    float lightAngle = dot(lightLookAt, lightDirection);
     float spotFactor = (lightAngle > 0.0f ? smoothstep(SpotLightOuterAngle, SpotLightInnerAngle, lightAngle) : 0.0);
 
-	return float4(saturate(ambient + spotFactor * IN.Attenuation * (diffuse + specular)), 1.0f);
-
+    return float4(ambient + (spotFactor * (diffuse + specular)), 1.0f);
+    
 }

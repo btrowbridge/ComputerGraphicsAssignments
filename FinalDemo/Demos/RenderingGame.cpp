@@ -31,18 +31,28 @@ namespace Rendering
 
 		//mDiffuseLightingDemo = make_shared<DiffuseLightingDemo>(*this, mCamera);
 		//mComponents.push_back(mDiffuseLightingDemo);
+		//demoQueue.push_back(mDiffuseLightingDemo);
+		
+		mPointLightingDemo = make_shared<PointLightingDemo>(*this, mCamera);
+		mComponents.push_back(mPointLightingDemo);
+		demoQueue.push_back(mPointLightingDemo);
 
-		//mPointLightingDemo = make_shared<PointLightingDemo>(*this, mCamera);
-		//mComponents.push_back(mPointLightingDemo);
-
-		//mSpecularLightingDemo = make_shared<SpecularLightingDemo>(*this, mCamera);
-		//mComponents.push_back(mSpecularLightingDemo);
+		mSpecularLightingDemo = make_shared<SpecularLightingDemo>(*this, mCamera);
+		mComponents.push_back(mSpecularLightingDemo);
+		demoQueue.push_back(mSpecularLightingDemo);
 
 		mSpotlightLightingDemo = make_shared<SpotlightLightingDemo>(*this, mCamera);
 		mComponents.push_back(mSpotlightLightingDemo);
+		demoQueue.push_back(mSpotlightLightingDemo);
 		
 
 		Game::Initialize(screenWidth, screenHeight, windowHandle);
+		for (auto& component : demoQueue) {
+			component->SetEnabled(false);
+			component->SetVisible(false);
+		}
+		demoQueue.front()->SetEnabled(true);
+		demoQueue.front()->SetVisible(true);
 
 		SamplerStates::BorderColor = Colors::White;
 		SamplerStates::Initialize(mDirect3DDevice.Get());
@@ -79,7 +89,13 @@ namespace Rendering
 
 			if (mGamePad->WasButtonPressedThisFrame(GamePadButtons::Back))
 			{
-				Exit();
+				auto& temp = demoQueue.front();
+				temp->SetEnabled(false);
+				temp->SetVisible(false);
+				demoQueue.pop_front();
+				demoQueue.push_back(temp);
+				demoQueue.front()->SetEnabled(true);
+				demoQueue.front()->SetVisible(true);
 			}
 		}
 

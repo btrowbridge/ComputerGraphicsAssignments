@@ -4,6 +4,7 @@
 #include <memory>
 #include <DirectXMath.h>
 #include "Game.h"
+#include <queue>
 
 namespace Library
 {
@@ -13,6 +14,7 @@ namespace Library
 	class FpsComponent;
 	class RenderStateHelper;
 	class Grid;
+	class DrawableGameComponent;
 }
 
 namespace Rendering
@@ -48,5 +50,7 @@ namespace Rendering
 		std::shared_ptr<PointLightingDemo> mPointLightingDemo;
 		std::shared_ptr<SpecularLightingDemo> mSpecularLightingDemo;
 		std::shared_ptr<SpotlightLightingDemo> mSpotlightLightingDemo;
+
+		std::deque<std::shared_ptr<Library::DrawableGameComponent>> demoQueue;
 	};
 }

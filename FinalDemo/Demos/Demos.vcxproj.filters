@@ -28,7 +28,7 @@
     <FxCompile Include="Content\Shaders\SpotlightLightingDemoPS.hlsl">
       <Filter>Content\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Content\Shaders\SpotlighLightingDemoVS.hlsl">
+    <FxCompile Include="Content\Shaders\SpotlightLightingDemoVS.hlsl">
       <Filter>Content\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
