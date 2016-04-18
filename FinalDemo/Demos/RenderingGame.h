@@ -32,6 +32,7 @@ namespace Rendering
 		virtual void Initialize(UINT screenWidth, UINT screenHeight, HWND windowHandle) override;
 		virtual void Shutdown() override;
 		virtual void Update(const Library::GameTime& gameTime) override;
+		void CycleDemo();
 		virtual void Draw(const Library::GameTime& gameTime) override;
 
 	private:

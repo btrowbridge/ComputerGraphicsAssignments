@@ -12,13 +12,13 @@ namespace Rendering
 
 	SpecularLightingDemo::SpecularLightingDemo(Game& game) :
 		DrawableGameComponent(game), mWorldMatrix(MatrixHelper::Identity), mIndexCount(0),
-		mAnimationEnabled(false), mUseGamePadForDirectionalLight(false)
+		mAnimationEnabled(false), mUseGamePadForDirectionalLight(false), mRenderStateHelper(game), mSpriteBatch(nullptr), mSpriteFont(nullptr), mTextPosition(0.0f, 40.0f)
 	{
 	}
 
 	SpecularLightingDemo::SpecularLightingDemo(Game & game, const shared_ptr<Camera>& camera) :
 		DrawableGameComponent(game, camera), mWorldMatrix(MatrixHelper::Identity), mIndexCount(0),
-		mAnimationEnabled(false), mUseGamePadForDirectionalLight(false)
+		mAnimationEnabled(false), mUseGamePadForDirectionalLight(false), mRenderStateHelper(game), mSpriteBatch(nullptr), mSpriteFont(nullptr), mTextPosition(0.0f, 40.0f)
 	{
 	}
 
@@ -81,9 +81,11 @@ namespace Rendering
 		wstring textureName = L"Content\\Textures\\Earthatday.dds";
 		ThrowIfFailed(CreateDDSTextureFromFile(mGame->Direct3DDevice(), textureName.c_str(), nullptr, mColorTexture.ReleaseAndGetAddressOf()), "CreateDDSTextureFromFile() failed.");
 
-		// Update the pixel shader constant buffer
-		mGame->Direct3DDeviceContext()->UpdateSubresource(mPSConstantBufferPF.Get(), 0, nullptr, &mPSCBufferPerFrame, 0, 0);
 
+		mSpriteBatch = std::make_unique<SpriteBatch>(mGame->Direct3DDeviceContext());
+		mSpriteFont = std::make_unique<SpriteFont>(mGame->Direct3DDevice(), L"Content\\Fonts\\Arial_14_Regular.spritefont");
+
+		//Create DirectionalLight
 		mDirectionalLight = std::make_unique<DirectionalLight>(*mGame);
 		mPSCBufferPerFrame.LightDirection = mDirectionalLight->DirectionToLight();
 
@@ -185,6 +187,24 @@ namespace Rendering
 		direct3DDeviceContext->DrawIndexed(mIndexCount, 0, 0);
 
 		mProxyModel->Draw(gameTime);
+
+		mRenderStateHelper.SaveAll();
+
+		mSpriteBatch->Begin();
+
+		std::wostringstream helpLabel;
+
+		helpLabel << "Ambient Intensity (+A/-X): " << mPSCBufferPerFrame.AmbientColor.x << "\n";
+		helpLabel << L"Specular Intensity (+DpadLeft/-DpadRight): " << mPSCBufferPerObject.SpecularColor.x << "\n";
+		helpLabel << L"Specular Power (+DpadDown/-DpadUp): " << mPSCBufferPerObject.SpecularPower << "\n";
+		helpLabel << L"Directional Light Intensity (+B/-Y): " << mPSCBufferPerFrame.LightColor.x << "\n";
+		helpLabel << L"Rotate Directional Light (RStick)";
+
+		mSpriteFont->DrawString(mSpriteBatch.get(), helpLabel.str().c_str(), mTextPosition);
+
+		mSpriteBatch->End();
+
+		mRenderStateHelper.RestoreAll();
 	}
 
 	void SpecularLightingDemo::CreateVertexBuffer(const Mesh& mesh, ID3D11Buffer** vertexBuffer) const
@@ -222,13 +242,17 @@ namespace Rendering
 	{
 		static float ambientIntensity = mPSCBufferPerFrame.AmbientColor.x;
 
+		if (mKeyboard->WasKeyPressedThisFrame(Keys::NumPad0)) {
+			DirectX::XMFLOAT4 r = ColorHelper::RandomColor();
+			mPSCBufferPerFrame.AmbientColor = XMFLOAT4(r.x, r.y, r.z, 1.0f);
+		}
 		if (mGamePad->IsButtonDown(GamePadButtons::A) && ambientIntensity < 1.0f)
 		{
 			ambientIntensity += gameTime.ElapsedGameTimeSeconds().count();
 			ambientIntensity = min(ambientIntensity, 1.0f);
 
 			mPSCBufferPerFrame.AmbientColor = XMFLOAT4(ambientIntensity, ambientIntensity, ambientIntensity, 1.0f);
-			mGame->Direct3DDeviceContext()->UpdateSubresource(mPSConstantBufferPF.Get(), 0, nullptr, &mPSCBufferPerFrame, 0, 0);
+
 		}
 		else if (mGamePad->IsButtonDown(GamePadButtons::X) && ambientIntensity > 0.0f)
 		{
@@ -236,7 +260,7 @@ namespace Rendering
 			ambientIntensity = max(ambientIntensity, 0.0f);
 
 			mPSCBufferPerFrame.AmbientColor = XMFLOAT4(ambientIntensity, ambientIntensity, ambientIntensity, 1.0f);
-			mGame->Direct3DDeviceContext()->UpdateSubresource(mPSConstantBufferPF.Get(), 0, nullptr, &mPSCBufferPerFrame, 0, 0);
+
 		}
 	}
 
@@ -244,7 +268,10 @@ namespace Rendering
 	{
 		static float directionalIntensity = mPSCBufferPerFrame.LightColor.x;
 		float elapsedTime = gameTime.ElapsedGameTimeSeconds().count();
-
+		if (mKeyboard->WasKeyPressedThisFrame(Keys::NumPad1)) {
+			DirectX::XMFLOAT4 r = ColorHelper::RandomColor();
+			mPSCBufferPerFrame.LightColor = XMFLOAT4(r.x, r.y, r.z,1.0f);
+		}
 		// Update directional light intensity
 		if (mGamePad->IsButtonDown(GamePadButtons::B) && directionalIntensity < 1.0f)
 		{
@@ -297,7 +324,10 @@ namespace Rendering
 	void SpecularLightingDemo::UpdateSpecularLight(const Library::GameTime & gameTime)
 	{
 		static float specularIntensity = 1.0f;
-
+		if (mKeyboard->WasKeyPressedThisFrame(Keys::NumPad2)) {
+			DirectX::XMFLOAT4 r = ColorHelper::RandomColor();
+			mPSCBufferPerObject.SpecularColor = XMFLOAT3(r.x, r.y, r.z);
+		}
 		if (mGamePad->IsButtonDown(GamePadButtons::DPadLeft) && specularIntensity < 1.0f)
 		{
 			specularIntensity += static_cast<float>(gameTime.ElapsedGameTimeSeconds().count());

@@ -89,13 +89,7 @@ namespace Rendering
 
 			if (mGamePad->WasButtonPressedThisFrame(GamePadButtons::Back))
 			{
-				auto& temp = demoQueue.front();
-				temp->SetEnabled(false);
-				temp->SetVisible(false);
-				demoQueue.pop_front();
-				demoQueue.push_back(temp);
-				demoQueue.front()->SetEnabled(true);
-				demoQueue.front()->SetVisible(true);
+				CycleDemo();
 			}
 		}
 
@@ -103,10 +97,22 @@ namespace Rendering
 		{
 			Exit();
 		}
+		else if (mKeyboard->WasKeyPressedThisFrame(Keys::Space))
+		{
+			CycleDemo();
+		}
 
 		Game::Update(gameTime);
 	}
-
+	void RenderingGame::CycleDemo() {
+		auto& temp = demoQueue.front();
+		temp->SetEnabled(false);
+		temp->SetVisible(false);
+		demoQueue.pop_front();
+		demoQueue.push_back(temp);
+		demoQueue.front()->SetEnabled(true);
+		demoQueue.front()->SetVisible(true);
+	}
 	void RenderingGame::Draw(const Library::GameTime & gameTime)
 	{
 		mDirect3DDeviceContext->ClearRenderTargetView(mRenderTargetView.Get(), reinterpret_cast<const float*>(&BackgroundColor));

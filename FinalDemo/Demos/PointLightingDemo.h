@@ -115,5 +115,10 @@ namespace Rendering
 		Library::KeyboardComponent* mKeyboard;
 		Library::GamePadComponent* mGamePad;
 		bool mUseGamePadForPointLight;
+
+		Library::RenderStateHelper mRenderStateHelper;
+		std::unique_ptr<DirectX::SpriteBatch> mSpriteBatch;
+		std::unique_ptr<DirectX::SpriteFont> mSpriteFont;
+		DirectX::XMFLOAT2 mTextPosition;
 	};
 }
