@@ -99,5 +99,4 @@ namespace Library
 		XMMATRIX transformMatrix = XMLoadFloat4x4(&transform);
 		ApplyRotation(transformMatrix);
 	}
-
 }

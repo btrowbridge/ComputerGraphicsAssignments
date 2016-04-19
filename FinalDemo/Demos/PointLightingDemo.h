@@ -99,7 +99,6 @@ namespace Rendering
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mVSConstantBufferPF;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mPSConstantBufferPF;
 
-
 		DirectX::XMFLOAT4X4 mWorldMatrix;
 
 		VertexCBufferPerObject mVSCBufferPerObject;

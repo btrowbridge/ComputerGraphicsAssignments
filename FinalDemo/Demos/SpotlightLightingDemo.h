@@ -129,6 +129,7 @@ namespace Rendering
 		Library::KeyboardComponent* mKeyboard;
 		Library::GamePadComponent* mGamePad;
 		bool mUseGamePadForSpotLight;
+		bool mIsAStarWars;
 
 		Library::RenderStateHelper mRenderStateHelper;
 		std::unique_ptr<DirectX::SpriteBatch> mSpriteBatch;

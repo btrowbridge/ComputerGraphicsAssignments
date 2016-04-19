@@ -85,7 +85,6 @@ namespace Rendering
 		mSpriteBatch = std::make_unique<SpriteBatch>(mGame->Direct3DDeviceContext());
 		mSpriteFont = std::make_unique<SpriteFont>(mGame->Direct3DDevice(), L"Content\\Fonts\\Arial_14_Regular.spritefont");
 
-
 		//Create PointLight
 		mPointLight = std::make_unique<PointLight>(*mGame);
 		mPointLight->SetColor(DirectX::Colors::White);
@@ -93,7 +92,6 @@ namespace Rendering
 		mPointLight->SetEnabled(true);
 		mPointLight->SetRadius(50.0f);
 
-		
 		mVSCBufferPerFrame.LightRadius = mPointLight->Radius();
 		mVSCBufferPerFrame.LightPosition = mPointLight->Position();
 		mVSCBufferPerFrame.CameraPosition = mCamera->Position();
@@ -104,15 +102,11 @@ namespace Rendering
 		XMStoreFloat3(&mPSCBufferPerObject.SpecularColor, DirectX::Colors::White);
 		XMStoreFloat4(&mPSCBufferPerFrame.AmbientColor, DirectX::Colors::White);
 
-
-
 		// Load a proxy model for the directional light
 		mProxyModel = make_unique<ProxyModel>(*mGame, mCamera, "Content\\Models\\PointLightProxy.obj.bin", 0.5f);
 		mProxyModel->Initialize();
 		mProxyModel->SetPosition(mPointLight->Position());
 		mProxyModel->ApplyRotation(XMMatrixRotationY(XM_PIDIV2));
-		
-
 
 		// Locate possible input devices
 		mKeyboard = static_cast<KeyboardComponent*>(mGame->Services().GetService(KeyboardComponent::TypeIdClass()));
@@ -207,18 +201,22 @@ namespace Rendering
 
 		std::wostringstream helpLabel;
 
-		helpLabel << "Ambient Intensity (+A/-X): " << mPSCBufferPerFrame.AmbientColor.x << "\n";
-		helpLabel << L"Specular Intensity (+DPadLeft/-DPadRight): " << mPSCBufferPerObject.SpecularColor.x << "\n";
 		helpLabel << L"Specular Power (+DpadDown/-DPadUp): " << mPSCBufferPerObject.SpecularPower << "\n";
-		helpLabel << L"Point Light Intensity (+Y/-B): " << mPSCBufferPerFrame.LightColor.x << "\n";
-		helpLabel << L"Move Point Light (LStick, Triggers(L-Y/R+Y)";
+		helpLabel << L"Spot Light Radius (+RightBumper/-LeftBumper): " << mPointLight->Radius() << "\n";
+		helpLabel << L"Move Point Light (LStick, Triggers(L-Y/R+Y)\n";
+		helpLabel << L"All Colors RGB (+num/-D)\n";
+		helpLabel << L"Ambient Color RGB (1,2,3) All/Intensity(+A/-X): ";
+		helpLabel << L"( " << mPSCBufferPerFrame.AmbientColor.x << L", " << mPSCBufferPerFrame.AmbientColor.y << L", " << mPSCBufferPerFrame.AmbientColor.z << L")\n";
+		helpLabel << L"Light Color RGB (4,5,6) All/Intensity(+Y/-B): ";
+		helpLabel << L"( " << mPSCBufferPerFrame.LightColor.x << L", " << mPSCBufferPerFrame.LightColor.y << L", " << mPSCBufferPerFrame.LightColor.z << L")\n";
+		helpLabel << L"Specular Color RGB (7,8,9) All/Intensity(+DPadLeft/-DPadRight): ";
+		helpLabel << L"( " << mPSCBufferPerObject.SpecularColor.x << L", " << mPSCBufferPerObject.SpecularColor.y << L", " << mPSCBufferPerObject.SpecularColor.z << L")\n";
 
 		mSpriteFont->DrawString(mSpriteBatch.get(), helpLabel.str().c_str(), mTextPosition);
 
 		mSpriteBatch->End();
 
 		mRenderStateHelper.RestoreAll();
-
 	}
 
 	void PointLightingDemo::CreateVertexBuffer(const Mesh& mesh, ID3D11Buffer** vertexBuffer) const
@@ -254,53 +252,84 @@ namespace Rendering
 
 	void PointLightingDemo::UpdateAmbientLight(const GameTime& gameTime)
 	{
-		static float ambientIntensity = mPSCBufferPerFrame.AmbientColor.x;
-		if (mKeyboard->WasKeyPressedThisFrame(Keys::NumPad0)) {
-			mPSCBufferPerFrame.AmbientColor = ColorHelper::RandomColor();
-		}
-		
-		if (mGamePad->IsButtonDown(GamePadButtons::A) && ambientIntensity < 1.0f)
-		{
-			ambientIntensity += gameTime.ElapsedGameTimeSeconds().count();
-			ambientIntensity = min(ambientIntensity, 1.0f);
-			mPSCBufferPerFrame.AmbientColor = XMFLOAT4(ambientIntensity, ambientIntensity, ambientIntensity, 1.0f);
+		float elapsedTime = gameTime.ElapsedGameTimeSeconds().count();
+		static float ambientr = mPSCBufferPerFrame.AmbientColor.x;
+		static float ambientg = mPSCBufferPerFrame.AmbientColor.y;
+		static float ambientb = mPSCBufferPerFrame.AmbientColor.z;
 
-	
+		//Color
+		if (mKeyboard->IsKeyDown(Keys::NumPad1) || mGamePad->IsButtonDown(GamePadButtons::A)) {
+			ambientr = max(0.0f, min(ambientr + elapsedTime, 1.0f));
+			mPSCBufferPerFrame.AmbientColor = XMFLOAT4(ambientr, ambientg, ambientb, 1.0f);
 		}
-		else if (mGamePad->IsButtonDown(GamePadButtons::X) && ambientIntensity > 0.0f)
-		{
-			ambientIntensity -= gameTime.ElapsedGameTimeSeconds().count();
-			ambientIntensity = max(ambientIntensity, 0.0f);
-
-			mPSCBufferPerFrame.AmbientColor = XMFLOAT4(ambientIntensity, ambientIntensity, ambientIntensity, 1.0f);
+		else if (mKeyboard->IsKeyDown(Keys::D1) || mGamePad->IsButtonDown(GamePadButtons::X)) {
+			ambientr = max(0.0f, min(ambientr - elapsedTime, 1.0f));
+			mPSCBufferPerFrame.AmbientColor = XMFLOAT4(ambientr, ambientg, ambientb, 1.0f);
+		}
+		if (mKeyboard->IsKeyDown(Keys::NumPad2) || mGamePad->IsButtonDown(GamePadButtons::A)) {
+			ambientg = max(0.0f, min(ambientg + elapsedTime, 1.0f));
+			mPSCBufferPerFrame.AmbientColor = XMFLOAT4(ambientr, ambientg, ambientb, 1.0f);
+		}
+		else if (mKeyboard->IsKeyDown(Keys::D2) || mGamePad->IsButtonDown(GamePadButtons::X)) {
+			ambientg = max(0.0f, min(ambientg - elapsedTime, 1.0f));
+			mPSCBufferPerFrame.AmbientColor = XMFLOAT4(ambientr, ambientg, ambientb, 1.0f);
+		}
+		if (mKeyboard->IsKeyDown(Keys::NumPad3) || mGamePad->IsButtonDown(GamePadButtons::A)) {
+			ambientb = max(0.0f, min(ambientb + elapsedTime, 1.0f));
+			mPSCBufferPerFrame.AmbientColor = XMFLOAT4(ambientr, ambientg, ambientb, 1.0f);
+		}
+		else if (mKeyboard->IsKeyDown(Keys::D3) || mGamePad->IsButtonDown(GamePadButtons::X)) {
+			ambientb = max(0.0f, min(ambientb - elapsedTime, 1.0f));
+			mPSCBufferPerFrame.AmbientColor = XMFLOAT4(ambientr, ambientg, ambientb, 1.0f);
 		}
 	}
 
 	void PointLightingDemo::UpdatePointLight(const GameTime& gameTime, const GamePad::State& gamePadState)
 	{
-		static float pointLightIntensity = 1.0f;
-		float elapsedTime = static_cast<float>(gameTime.ElapsedGameTimeSeconds().count());
-		
-		if (mKeyboard->WasKeyPressedThisFrame(Keys::NumPad1)) {
-			mPSCBufferPerFrame.LightColor = ColorHelper::RandomColor();
+		float elapsedTime = gameTime.ElapsedGameTimeSeconds().count();
+		static float lightr = mPSCBufferPerFrame.LightColor.x;
+		static float lightg = mPSCBufferPerFrame.LightColor.y;
+		static float lightb = mPSCBufferPerFrame.LightColor.z;
+
+		//Color
+		if (mKeyboard->IsKeyDown(Keys::NumPad4) || mGamePad->IsButtonDown(GamePadButtons::Y)) {
+			lightr = max(0.0f, min(lightr + elapsedTime, 1.0f));
+			mPSCBufferPerFrame.LightColor = XMFLOAT4(lightr, lightg, lightb, 1.0f);
+		}
+		else if (mKeyboard->IsKeyDown(Keys::D4) || mGamePad->IsButtonDown(GamePadButtons::B)) {
+			lightr = max(0.0f, min(lightr - elapsedTime, 1.0f));
+			mPSCBufferPerFrame.LightColor = XMFLOAT4(lightr, lightg, lightb, 1.0f);
+		}
+		if (mKeyboard->IsKeyDown(Keys::NumPad5) || mGamePad->IsButtonDown(GamePadButtons::Y)) {
+			lightg = max(0.0f, min(lightg + elapsedTime, 1.0f));
+			mPSCBufferPerFrame.LightColor = XMFLOAT4(lightr, lightg, lightb, 1.0f);
+		}
+		else if (mKeyboard->IsKeyDown(Keys::D5) || mGamePad->IsButtonDown(GamePadButtons::B)) {
+			lightg = max(0.0f, min(lightg - elapsedTime, 1.0f));
+			mPSCBufferPerFrame.LightColor = XMFLOAT4(lightr, lightg, lightb, 1.0f);
+		}
+		if (mKeyboard->IsKeyDown(Keys::NumPad6) || mGamePad->IsButtonDown(GamePadButtons::Y)) {
+			lightb = max(0.0f, min(lightb + elapsedTime, 1.0f));
+			mPSCBufferPerFrame.LightColor = XMFLOAT4(lightr, lightg, lightb, 1.0f);
+		}
+		else if (mKeyboard->IsKeyDown(Keys::D6) || mGamePad->IsButtonDown(GamePadButtons::B)) {
+			lightb = max(0.0f, min(lightb - elapsedTime, 1.0f));
+			mPSCBufferPerFrame.LightColor = XMFLOAT4(lightr, lightg, lightb, 1.0f);
 		}
 
-		// Update point light intensity
-		if (mGamePad->IsButtonDown(GamePadButtons::Y) && pointLightIntensity < 1.0f)
+		// Update the light's radius
+		if (mGamePad->IsButtonDown(GamePadButtons::RightShoulder))
 		{
-			pointLightIntensity += elapsedTime;
-			pointLightIntensity = min(pointLightIntensity, 1.0f);
-
-			mPSCBufferPerFrame.LightColor = XMFLOAT4(pointLightIntensity, pointLightIntensity, pointLightIntensity, 1.0f);
-			mPointLight->SetColor(mPSCBufferPerFrame.LightColor);
+			float radius = mPointLight->Radius() + LightModulationRate * elapsedTime;
+			mPointLight->SetRadius(radius);
+			mVSCBufferPerFrame.LightRadius = mPointLight->Radius();
 		}
-		if (mGamePad->IsButtonDown(GamePadButtons::B) && pointLightIntensity > 0.0f)
+		else if (mGamePad->IsButtonDown(GamePadButtons::LeftShoulder))
 		{
-			pointLightIntensity -= elapsedTime;
-			pointLightIntensity = max(pointLightIntensity, 0.0f);
-
-			mPSCBufferPerFrame.LightColor = XMFLOAT4(pointLightIntensity, pointLightIntensity, pointLightIntensity, 1.0f);
-			mPointLight->SetColor(mPSCBufferPerFrame.LightColor);
+			float radius = mPointLight->Radius() - LightModulationRate * elapsedTime;
+			radius = max(radius, 0.0f);
+			mPointLight->SetRadius(radius);
+			mVSCBufferPerFrame.LightRadius = mPointLight->Radius();
 		}
 		if (mUseGamePadForPointLight) {
 			XMFLOAT3 movementAmount = Vector3Helper::Zero;
@@ -317,23 +346,35 @@ namespace Rendering
 
 	void PointLightingDemo::UpdateSpecularLight(const GameTime& gameTime)
 	{
-		static float specularIntensity = 1.0f;
-		if (mKeyboard->WasKeyPressedThisFrame(Keys::NumPad2)) {
-			DirectX::XMFLOAT4 r = ColorHelper::RandomColor();
-			mPSCBufferPerObject.SpecularColor= XMFLOAT3(r.x,r.y,r.z);
+		float elapsedTime = gameTime.ElapsedGameTimeSeconds().count();
+		static float specr = mPSCBufferPerObject.SpecularColor.x;
+		static float specg = mPSCBufferPerObject.SpecularColor.y;
+		static float specb = mPSCBufferPerObject.SpecularColor.z;
+
+		//Color
+		if (mKeyboard->IsKeyDown(Keys::NumPad7) || mGamePad->IsButtonDown(GamePadButtons::DPadRight)) {
+			specr = max(0.0f, min(specr + elapsedTime, 1.0f));
+			mPSCBufferPerObject.SpecularColor = XMFLOAT3(specr, specg, specb);
 		}
-		if (mGamePad->IsButtonDown(GamePadButtons::DPadLeft) && specularIntensity < 1.0f)
-		{
-			specularIntensity += static_cast<float>(gameTime.ElapsedGameTimeSeconds().count());
-			specularIntensity = min(specularIntensity, 1.0f);
-
-			mPSCBufferPerObject.SpecularColor = XMFLOAT3(specularIntensity, specularIntensity, specularIntensity);
-		} else if (mGamePad->IsButtonDown(GamePadButtons::DPadRight) && specularIntensity > 0.0f)
-		{
-			specularIntensity -= (float)gameTime.ElapsedGameTimeSeconds().count();
-			specularIntensity = max(specularIntensity, 0.0f);
-
-			mPSCBufferPerObject.SpecularColor = XMFLOAT3(specularIntensity, specularIntensity, specularIntensity);
+		else if (mKeyboard->IsKeyDown(Keys::D7) || mGamePad->IsButtonDown(GamePadButtons::DPadLeft)) {
+			specr = max(0.0f, min(specr - elapsedTime, 1.0f));
+			mPSCBufferPerObject.SpecularColor = XMFLOAT3(specr, specg, specb);
+		}
+		if (mKeyboard->IsKeyDown(Keys::NumPad8) || mGamePad->IsButtonDown(GamePadButtons::DPadRight)) {
+			specg = max(0.0f, min(specg + elapsedTime, 1.0f));
+			mPSCBufferPerObject.SpecularColor = XMFLOAT3(specr, specg, specb);
+		}
+		else if (mKeyboard->IsKeyDown(Keys::D8) || mGamePad->IsButtonDown(GamePadButtons::DPadLeft)) {
+			specg = max(0.0f, min(specg - elapsedTime, 1.0f));
+			mPSCBufferPerObject.SpecularColor = XMFLOAT3(specr, specg, specb);
+		}
+		if (mKeyboard->IsKeyDown(Keys::NumPad9) || mGamePad->IsButtonDown(GamePadButtons::DPadRight)) {
+			specb = max(0.0f, min(specb + elapsedTime, 1.0f));
+			mPSCBufferPerObject.SpecularColor = XMFLOAT3(specr, specg, specb);
+		}
+		else if (mKeyboard->IsKeyDown(Keys::D9) || mGamePad->IsButtonDown(GamePadButtons::DPadLeft)) {
+			specb = max(0.0f, min(specb - elapsedTime, 1.0f));
+			mPSCBufferPerObject.SpecularColor = XMFLOAT3(specr, specg, specb);
 		}
 
 		static float specularPower = mPSCBufferPerObject.SpecularPower;

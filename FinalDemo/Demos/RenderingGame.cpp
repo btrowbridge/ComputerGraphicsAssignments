@@ -32,7 +32,7 @@ namespace Rendering
 		//mDiffuseLightingDemo = make_shared<DiffuseLightingDemo>(*this, mCamera);
 		//mComponents.push_back(mDiffuseLightingDemo);
 		//demoQueue.push_back(mDiffuseLightingDemo);
-		
+
 		mPointLightingDemo = make_shared<PointLightingDemo>(*this, mCamera);
 		mComponents.push_back(mPointLightingDemo);
 		demoQueue.push_back(mPointLightingDemo);
@@ -44,7 +44,6 @@ namespace Rendering
 		mSpotlightLightingDemo = make_shared<SpotlightLightingDemo>(*this, mCamera);
 		mComponents.push_back(mSpotlightLightingDemo);
 		demoQueue.push_back(mSpotlightLightingDemo);
-		
 
 		Game::Initialize(screenWidth, screenHeight, windowHandle);
 		for (auto& component : demoQueue) {
